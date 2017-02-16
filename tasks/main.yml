@@ -1,0 +1,6 @@
+---
+- include: install.yml
+
+- include: indirect.yml
+  when: autofs_indirect_maps is defined
+  

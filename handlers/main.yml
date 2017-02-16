@@ -1,0 +1,7 @@
+---
+- name: Restart autofs
+  tags:
+    - services
+    - autofs
+  service: name=autofs state=restarted
+

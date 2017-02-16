@@ -1,0 +1,66 @@
+---
+#=====
+# Autofs Role
+#=====
+
+autofs_pkgs:
+  - autofs
+
+autofs_master: '/etc/auto.master'
+
+# This is where the source files for automount scripts or static files are found on control host:
+autofs_scripts_source: 'files/autofs'
+
+autofs_indirect_maps: []
+
+# TIP:
+# Setting the 'enabled' attributes in autofs_indirect_maps via a variable makes it 
+# possible to define a single autofs_indirect_maps structure for your site
+# and then easily enable/disable different mounts on different hosts or groups. 
+#
+#cyfiles_enabled: true
+#myfiles_enabled: true
+#remote_enabled: true
+#www_enabled: true
+#cyfiles_mountpoint: "/cyfiles"
+#myfiles_mountpoint: "/myfiles"
+
+#autofs_indirect_maps:
+## Example 1: indirect map that calls a script (note the file mode)
+#  - name: auto.cyfiles
+#    path: "{{ cyfiles_mountpoint }}"
+#    enabled: "{{ cyfiles_enabled }}"
+#    autofsoptions: "--timeout 1800"
+#    file:  /etc/auto.cyfiles
+#    mode: "0755"
+
+## Example 2: indirect map that uses a simple file for the map (note the file mode).
+#  - name: auto.remote
+#    path: /remote
+#    enabled: "{{ remote_enabled }}"
+#    autofsoptions: "--timeout 3600"
+#    file:  /etc/auto.remote
+#    mode: "0644"
+
+## Example 3: indirect map where the mount mappings are included in the map file.
+#  - name: auto.myfiles
+#    path: "{{ myfiles_mountpoint }}"
+#    enabled: "{{ myfiles_enabled }}"
+#    autofsoptions: "--timeout 1800"
+#    mounts:
+#       - name: '*'
+#         fstype: 'nfs4'
+#         mountoptions: 'sec=krb5,rw'
+#         url: 'my.files.iastate.edu:/ifs/isu/engr/users/&'
+
+#  - name: auto.www
+#    path: /www
+#    enabled: "{{ www_enabled }}"
+#    autofsoptions: "--timeout 3600"
+#    mounts:
+#       - name: '*'
+#         fstype: 'nfs4'
+#         mountoptions: 'sec=krb5,rw'
+#         url: 'my.files.iastate.edu:/ifs/isu/engr/sites/home/&'
+
+
