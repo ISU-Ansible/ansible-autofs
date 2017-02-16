@@ -13,5 +13,12 @@
     enabled_autofs_indirect_maps:
       - "auto.stuff"
 
+  pre_tasks:
+    - package:
+        name: "{{item}}"
+        state: installed
+      with_items:
+        - "nfs-utils"
+
   roles:
     - role_under_test
