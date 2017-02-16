@@ -2,6 +2,7 @@
 autofs_master: '/etc/auto.master'
 autofs_indirect_maps: []
 enabled_autofs_indirect_maps: []
+
 # TIP:
 # Setting the 'enabled' attributes in autofs_indirect_maps via a variable makes it
 # possible to define a single autofs_indirect_maps structure for your site

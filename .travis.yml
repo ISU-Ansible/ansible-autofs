@@ -12,9 +12,9 @@ env:
   - distro: fedora
     init: /usr/sbin/init
     run_opts: "--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=/tmp:/tmp:rw --volume=/run:/run:rw"
-  #- distro: fedora24
-  #  init: /usr/sbin/init
-  #  run_opts: "--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=/tmp:/tmp:rw --volume=/run:/run:rw"
+  - distro: fedora24
+    init: /usr/sbin/init
+    run_opts: "--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=/tmp:/tmp:rw --volume=/run:/run:rw"
   #- distro: ubuntu1604
   #  init: /lib/systemd/systemd
   #  run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
@@ -65,7 +65,7 @@ script:
   #   || (echo 'SSH is not started - failure' && exit 1)
 
   # Test assertions.
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test-assertions.yml'
+  #- 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test-assertions.yml'
 
   # Check if configuration has been put into place
   # - ssh_config=$(mktemp)

@@ -6,6 +6,8 @@
      src: auto.master.d.j2
      dest: "/etc/auto.master.d/{{item.name}}.autofs"
      mode: 0644
+  with_items:
+    - "{{autofs_indirect_maps}}"
   notify:
     - Restart autofs
 
