@@ -14,18 +14,20 @@
       - "auto.stuff"
 
   pre_tasks:
-    - package:
+    - name: TEST | Testing
+      package:
         name: "{{item}}"
         state: installed
       with_items:
         - "nfs-utils"
     
-   - service:
-       name: "{{item}}"
-       state: started
-       enabled: yes
-     with_items:
-       - "rpcbind"
+    - name: TEST | Testing 1
+      service:
+        name: "{{item}}"
+        state: started
+        enabled: yes
+      with_items:
+        - "rpcbind"
 
   roles:
     - role_under_test
