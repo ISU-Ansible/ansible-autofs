@@ -21,3 +21,4 @@
     enabled: yes
     state: started
   with_items: "{{autofs_dependencies}}"
+  changed_when: False
