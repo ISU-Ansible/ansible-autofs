@@ -1,0 +1,7 @@
+---
+autofs_pkgs:
+  - autofs
+
+autofs_dependencies:
+  - rpcgssd
+  - autofs

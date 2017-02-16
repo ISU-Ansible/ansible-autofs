@@ -3,39 +3,21 @@
   tags:
     - configuration
     - autofs
-  yum: 
-    name: '{{item}}' 
+  yum:
+    name: '{{item}}'
     state: present
-  with_items: 
+  with_items:
     - "{{autofs_pkgs}}"
   notify:
     - Restart autofs
 
-- name: Enable AutoFS and dependencies for RHEL 7
+- name: Enable AutoFS and dependencies
   tags:
     - configuration
     - autofs
     - nfs
-  service: 
-    name: "{{item}}" 
-    enabled: yes 
+  service:
+    name: "{{item}}"
+    enabled: yes
     state: started
-  with_items:
-    - nfs-secure
-    - autofs
-  when: ansible_distribution_major_version == '7'
-
-- name: Enable AutoFS and dependencies for RHEL 6
-  tags:
-    - configuration
-    - autofs
-    - nfs
-  service: 
-    name: "{{item}}" 
-    enabled: yes 
-    state: started
-  with_items:
-    - rpcgssd
-    - autofs
-  when: ansible_distribution_major_version == '6'
-
+  with_items: "{{autofs_dependencies}}"

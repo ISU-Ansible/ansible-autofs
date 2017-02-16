@@ -3,5 +3,6 @@
   tags:
     - services
     - autofs
-  service: name=autofs state=restarted
-
+  service:
+    name: autofs
+    state: restarted

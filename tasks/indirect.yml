@@ -2,9 +2,9 @@
 - name: Add map file(s) to auto.master template
   tags:
     - autofs
-  template: 
-     src: auto.master.j2 
-     dest: /etc/auto.master 
+  template:
+     src: auto.master.d.j2
+     dest: "/etc/auto.master.d/{{item.name}}.autofs"
      mode: 0644
   notify:
     - Restart autofs
@@ -16,30 +16,18 @@
      src: indirect.j2
      dest: "/etc/{{ item.name }}"
      mode: 0644
-  with_items: 
+  with_items:
     - "{{autofs_indirect_maps}}"
   when: item.mounts is defined and item.name in enabled_autofs_indirect_maps
-  notify: Restart autofs
-
-- name: Install files for indirect maps that use scripts or static files
-  tags:
-    - autofs
-  copy:
-      src: "{{ autofs_scripts_source }}/{{ item.name }}"
-      dest: "{{ item.file }}"
-      mode: "{{ item.mode }}"
-  with_items: 
-    - "{{autofs_indirect_maps}}"
-  when:  item.file is defined and item.name in enabled_autofs_indirect_maps
   notify: Restart autofs
 
 - name: Check map paths
   tags:
     - autofs
-  file: 
-      path: "{{ item.path }}" 
+  file:
+      path: "{{ item.path }}"
       state: directory
-  with_items: 
+  with_items:
     - "{{autofs_indirect_maps}}"
   when: item.name in enabled_autofs_indirect_maps
   notify: Restart autofs

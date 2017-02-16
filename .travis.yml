@@ -1,0 +1,103 @@
+---
+# We need sudo for some of the Docker commands.
+sudo: required
+
+env:
+  - distro: centos7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=/tmp:/tmp:rw --volume=/run:/run:rw"
+  - distro: centos6
+    init: /sbin/init
+    run_opts: ""
+  - distro: fedora
+    init: /usr/sbin/init
+    run_opts: "--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=/tmp:/tmp:rw --volume=/run:/run:rw"
+  - distro: fedora24
+    init: /usr/sbin/init
+    run_opts: "--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=/tmp:/tmp:rw --volume=/run:/run:rw"
+  - distro: ubuntu1604
+    init: /lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+
+# Tell Travis to start Docker when it brings up an environment.
+services:
+  - docker
+
+before_install:
+  - 'docker pull isuansible/docker-${distro}-ansible:latest'
+
+script:
+  - sudo apt-get install -y sshpass
+
+  - container_id=$(mktemp)
+  # Run container in detached state.
+  - 'docker run --detach -p 22 --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} isuansible/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
+
+  # Apparently, we need to run apt-get update for Ubuntu before we test our role
+  - 'if [ ${distro} = "ubuntu1604" ]; then docker exec --tty "$(cat ${container_id})" env TERM=xterm apt-get update; fi'
+
+  # Test facts.
+  #- 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible -m setup localhost'
+
+  # Ansible syntax check.
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
+
+  # Test role.
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
+
+  # Test role idempotence.
+  - idempotence=$(mktemp)
+  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml | tee -a ${idempotence}
+  - >
+    tail ${idempotence}
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
+  # Other tests if necessary
+  # Check if sshd is started
+  # - ssh=$(mktemp)
+  # - docker exec "$(cat ${container_id})" env TERM=xterm ps -eaf | tee -a ${ssh}
+  # - >
+  #   tail ${ssh}
+  #   | grep -q "/usr/sbin/sshd"
+  #   && (echo 'SSH is started - success' && exit 0)
+  #   || (echo 'SSH is not started - failure' && exit 1)
+
+  # Test assertions.
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test-assertions.yml'
+
+  # Check if configuration has been put into place
+  # - ssh_config=$(mktemp)
+  # - docker exec "$(cat ${container_id})" env TERM=xterm cat /etc/ssh/sshd_config | tee -a ${ssh_config}
+  # - >
+  #   tail ${ssh_config}
+  #   | grep -q "PermitRootLogin.*without-password"
+  #   && (echo 'Configuration - success' && exit 0)
+  #   || (echo 'Configuraiton - not successful' && exit 1)
+
+  # Actually test whether or not an SSH connection works
+  #- 'docker exec --tty "$(cat ${container_id})" env TERM=xterm useradd --password "$6$fr/j/P.8$gudGkPvtlJVPnzdVIRXa7pjqSYvHOg5wGDM5/jGkgY1wQNehvx3qN/DGLNLz9sAj8RauNa2gPvFiISnPivWSq/" test'
+
+  #- >
+  #  sshpass -p 'test' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no test@localhost date
+  #  && (echo 'SSH test: pass' && exit 0)
+  #  || (echo 'SSH test: fail' && exit 1)
+
+#after_failure:
+#  # Check what happened on systemd systems.
+#  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm systemctl -l status ${service_name}'
+#  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm journalctl -xe --no-pager'
+
+notifications:
+  email: false
+  irc:
+    channels:
+      - "chat.freenode.net#isudevops"
+    on_success: always
+    on_failure: change
+    use_notice: true
+    template:
+      - "%{repository_name}#%{build_number} [%{author}] (%{commit}): %{message} %{foo} "
+      - "Build details: %{build_url}"
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

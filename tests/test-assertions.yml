@@ -1,0 +1,42 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  vars:
+    autofs_indirect_maps:
+      - name: auto.stuff
+        path: "/stuff"
+        enabled: "true"
+        autofsoptions: "--timeout 1800"
+        mode: "0755"
+
+    enabled_autofs_indirect_maps:
+      - "auto.stuff"
+      
+  roles:
+    - role_under_test
+
+  tasks:
+    - name: "[Test] Does Configuration File Exist?"
+      stat:
+        path: "{{chronyd_configuration_file}}"
+      register: chrony_conf
+
+    - name: "[Test] Test File Defaults"
+      shell: "grep 'driftfile.*/var/lib/chrony/drift' {{chronyd_configuration_file}}"
+      when: chrony_conf.stat.exists == True
+      register: chrony_conf_contents
+
+    - name: "[Test] Absense of 'noclientlog'"
+      shell: "grep 'noclientlog' {{chronyd_configuration_file}}"
+      when: chrony_conf.stat.exists == True
+      register: noclientlog_stat
+      ignore_errors: true
+
+    - debug:
+        var: noclientlog_stat
+
+    - assert:
+        that:
+          - "chrony_conf_contents.rc == 0"
+          - "noclientlog_stat.rc != 0"

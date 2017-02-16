@@ -1,0 +1,7 @@
+---
+autofs_pkgs:
+  - autofs
+
+autofs_dependencies:
+  - nfs-secure
+  - autofs
