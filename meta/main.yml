@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  author: Barry Britt <bbritt@iastate.edu> and John Dickerson <jedicker@iastate.edu>
+  description: A role for the installation and configuration of autofs
+  company: Iowa State University
+  license: GPL
+  min_ansible_version: 2.0
+
+  platforms:
+    - name: EL
+      versions:
+      - 6
+      - 7
+    - name: Fedora
+      versions:
+      - all
+
+  galaxy_tags:
+    - system
+    - autofs
