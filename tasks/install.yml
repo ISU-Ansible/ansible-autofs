@@ -3,7 +3,7 @@
   tags:
     - configuration
     - autofs
-  yum:
+  package:
     name: '{{item}}'
     state: present
   with_items:
@@ -21,4 +21,4 @@
     enabled: yes
     state: started
   with_items: "{{autofs_dependencies}}"
-  changed_when: False
+  changed_when: false
