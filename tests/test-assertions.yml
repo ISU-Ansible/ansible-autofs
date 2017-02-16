@@ -12,31 +12,21 @@
 
     enabled_autofs_indirect_maps:
       - "auto.stuff"
-      
+
   roles:
     - role_under_test
 
   tasks:
-    - name: "[Test] Does Configuration File Exist?"
+    - name: "[Test] Does /etc/auto.master.d/stuff.autofs"
       stat:
-        path: "{{chronyd_configuration_file}}"
-      register: chrony_conf
+        path: "/etc/auto.master.d/stuff.autofs"
+      register: stuff
 
     - name: "[Test] Test File Defaults"
-      shell: "grep 'driftfile.*/var/lib/chrony/drift' {{chronyd_configuration_file}}"
-      when: chrony_conf.stat.exists == True
-      register: chrony_conf_contents
-
-    - name: "[Test] Absense of 'noclientlog'"
-      shell: "grep 'noclientlog' {{chronyd_configuration_file}}"
-      when: chrony_conf.stat.exists == True
-      register: noclientlog_stat
-      ignore_errors: true
-
-    - debug:
-        var: noclientlog_stat
+      shell: "grep '/stuff' /etc/auto.master.d/stuff.autofs"
+      when: stuff.stat.exists == True
+      register: stuff_contents
 
     - assert:
         that:
-          - "chrony_conf_contents.rc == 0"
-          - "noclientlog_stat.rc != 0"
+          - "stuff_contents.rc == 0"

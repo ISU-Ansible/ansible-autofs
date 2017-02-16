@@ -12,12 +12,12 @@ env:
   - distro: fedora
     init: /usr/sbin/init
     run_opts: "--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=/tmp:/tmp:rw --volume=/run:/run:rw"
-  - distro: fedora24
-    init: /usr/sbin/init
-    run_opts: "--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=/tmp:/tmp:rw --volume=/run:/run:rw"
-  - distro: ubuntu1604
-    init: /lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  #- distro: fedora24
+  #  init: /usr/sbin/init
+  #  run_opts: "--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume=/tmp:/tmp:rw --volume=/run:/run:rw"
+  #- distro: ubuntu1604
+  #  init: /lib/systemd/systemd
+  #  run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
 
 # Tell Travis to start Docker when it brings up an environment.
 services:
