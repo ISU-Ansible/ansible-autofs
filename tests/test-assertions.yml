@@ -17,17 +17,27 @@
     - role_under_test
 
   tasks:
-    - name: "Test | Does /etc/auto.master.d/stuff.autofs"
+    - name: "Test | Does /etc/auto.stuff exist"
       stat:
-        path: "/etc/auto.master.d/stuff.autofs"
+        path: "/etc/auto.stuff"
       register: autostuff
 
+    - name: "Test | Does /etc/auto.master.d/stuff.autofs exist?"
+      stat:
+        path: "/etc/auto.master.d/stuff.autofs"
+      register: automasterstuff
+
     - name: "TEST | Test File Defaults"
-      shell: "grep '/stuff' /etc/auto.master.d/stuff.autofs"
+      shell: "grep '/stuff' /etc/auto.stuff"
       when: autostuff.stat.exists == true
       register: autogrep
 
+    - name: "TEST | Test File Defaults"
+      shell: "grep '/stuff' /etc/auto.master.d/stuff.autofs"
+      when: automasterstuff.stat.exists == true
+      register: automastergrep
+
     - assert:
         that:
-          - "autostuff.stat.exists == true"
-          - "autogrep.rc == 0"
+          - "autostuff.stat.exists == true or automasterstuff.stat.exists == true"
+          - "autogrep.rc == 0 or automastergrep.rc == 0"
