@@ -24,14 +24,14 @@ services:
   - docker
 
 before_install:
-  - 'docker pull isuansible/docker-${distro}-ansible:latest'
+  - 'docker pull geerlingguy/docker-${distro}-ansible:latest'
 
 script:
   - sudo apt-get install -y sshpass
 
   - container_id=$(mktemp)
   # Run container in detached state.
-  - 'docker run --detach -p 22 --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} isuansible/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
+  - 'docker run --detach -p 22 --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
 
   # Apparently, we need to run apt-get update for Ubuntu before we test our role
   - 'if [ ${distro} = "ubuntu1604" ]; then docker exec --tty "$(cat ${container_id})" env TERM=xterm apt-get update; fi'
