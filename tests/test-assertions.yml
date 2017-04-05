@@ -22,7 +22,7 @@
       register: autostuff
 
     - name: "TEST | Test File Defaults"
-      shell: "grep '/stuff' /etc/auto.stuff"
+      shell: "grep 'timeout 1800' /etc/auto.stuff"
       register: autogrep
 
     - assert:
