@@ -21,27 +21,11 @@
         path: "/etc/auto.stuff"
       register: autostuff
 
-    - stat:
-        path: "/etc/auto.master.d/stuff.autofs"
-      register: automasterstuff
-
     - name: "TEST | Test File Defaults"
       shell: "grep '/stuff' /etc/auto.stuff"
-      when: autostuff.stat.exists
       register: autogrep
-
-    - name: "TEST | Test File Defaults"
-      shell: "grep '/stuff' /etc/auto.master.d/stuff.autofs"
-      when: automasterstuff.stat.exists
-      register: automastergrep
-
-    - debug:
-        var: autostuff
-
-    - debug:
-        var: automasterstuff
 
     - assert:
         that:
-          - "autostuff.stat.exists == true or automasterstuff.stat.exists == true"
-          - "autogrep.rc == 0 or automastergrep.rc == 0"
+          - "autostuff.stat.exists == true"
+          - "autogrep.rc == 0"
