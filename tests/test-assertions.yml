@@ -17,16 +17,16 @@
     - role_under_test
 
   tasks:
-    - name: "[Test] Does /etc/auto.master.d/stuff.autofs"
+    - name: "Test | Does /etc/auto.master.d/stuff.autofs"
       stat:
         path: "/etc/auto.master.d/stuff.autofs"
-      register: stuff
+      register: autostuff
 
-    - name: "[Test] Test File Defaults"
+    - name: "TEST | Test File Defaults"
       shell: "grep '/stuff' /etc/auto.master.d/stuff.autofs"
-      when: stuff.stat.exists == True
-      register: stuff_contents
+      when: autostuff.stat.exists == True
+      register: autogrep
 
     - assert:
         that:
-          - "stuff_contents.rc == 0"
+          - "autogrep.rc == 0"
