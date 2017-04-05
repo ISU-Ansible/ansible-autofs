@@ -24,9 +24,10 @@
 
     - name: "TEST | Test File Defaults"
       shell: "grep '/stuff' /etc/auto.master.d/stuff.autofs"
-      when: autostuff.stat.exists == True
+      when: autostuff.stat.exists == true
       register: autogrep
 
     - assert:
         that:
+          - "autostuff.stat.exists == true"
           - "autogrep.rc == 0"
