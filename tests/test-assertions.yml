@@ -29,12 +29,12 @@
 
     - name: "TEST | Test File Defaults"
       shell: "grep '/stuff' /etc/auto.stuff"
-      when: autostuff.stat.exists == true
+      when: autostuff.stat.exists
       register: autogrep
 
     - name: "TEST | Test File Defaults"
       shell: "grep '/stuff' /etc/auto.master.d/stuff.autofs"
-      when: automasterstuff.stat.exists == true
+      when: automasterstuff.stat.exists
       register: automastergrep
 
     - assert:
