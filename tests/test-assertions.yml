@@ -4,7 +4,7 @@
 
   vars:
     autofs_indirect_maps:
-      - name: auto.stuff
+      - name: stuff
         path: "/stuff"
         enabled: "true"
         autofsoptions: "--timeout 1800"
