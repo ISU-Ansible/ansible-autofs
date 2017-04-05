@@ -18,11 +18,11 @@
 
   tasks:
     - stat:
-        path: "/etc/auto.stuff"
+        path: "/etc/auto.master.d/stuff.autofs"
       register: autostuff
 
     - name: "TEST | Test File Defaults"
-      shell: "grep 'timeout 1800' /etc/auto.stuff"
+      shell: "grep 'timeout 1800' /etc/auto.master.d/stuff.autofs"
       register: autogrep
 
     - assert:
