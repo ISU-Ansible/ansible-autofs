@@ -17,13 +17,11 @@
     - role_under_test
 
   tasks:
-    - name: "Test | Does /etc/auto.stuff exist"
-      stat:
+    - stat:
         path: "/etc/auto.stuff"
       register: autostuff
 
-    - name: "Test | Does /etc/auto.master.d/stuff.autofs exist?"
-      stat:
+    - stat:
         path: "/etc/auto.master.d/stuff.autofs"
       register: automasterstuff
 
