@@ -31,3 +31,21 @@
 
   roles:
     - role_under_test
+
+  tasks:
+    - name: TEST | Check that /etc/auto.stuff exists
+      stat:
+        path: /etc/auto.stuff
+      register: autostuff
+
+    - name: TEST | Check that contents of auto.stuff are reasonable
+      shell: grep "/stuff" /etc/auto.stuff
+      register: autogrep
+      when: autostuff.stat.exists
+
+    - assert:
+        that:
+          - "autostuff.stat.exists is true"
+          - "autogrep.rc == 0" 
+
+
