@@ -37,6 +37,12 @@
       when: automasterstuff.stat.exists
       register: automastergrep
 
+    - debug:
+        var: autostuff
+
+    - debug:
+        var: automasterstuff
+
     - assert:
         that:
           - "autostuff.stat.exists == true or automasterstuff.stat.exists == true"
