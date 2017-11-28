@@ -1,6 +1,0 @@
-# {{ ansible_managed }}
-{% if item.file is not defined %}
-{% for mount in item.mounts %}
-{{ mount.name }} -fstype={{ mount.fstype }},{{ mount.mountoptions }} {{ mount.url }}
-{% endfor %}
-{% endif %}

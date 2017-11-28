@@ -1,16 +1,39 @@
 ---
-- name: AUTOFS | Include OS-specific variables.
+- name: SYSTEMD-AUTOMOUNT | Include OS-specific variables.
   include_vars: "{{item}}"
   with_first_found:
-    - "{{ansible_distribution}}_{{ansible_distribution_major_version}}_{{ansible_distribution_minor_version}}.yml"
-    - "{{ansible_distribution}}_{{ansible_distribution_major_version}}.yml"
-    - "{{ansible_distribution}}.yml"
-    - "{{ansible_os_family}}_{{ansible_distribution_major_version}}_{{ansible_distribution_minor_version}}.yml"
-    - "{{ansible_os_family}}_{{ansible_distribution_major_version}}.yml"
-    - "{{ansible_os_family}}.yml"
+    - "{{ ansible_distribution }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
+    - "{{ ansible_distribution }}_{{ ansible_distribution_major_version}}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
+    - "{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_os_family }}.yml"
     - default.yml
 
-- include: install.yml
+- name: SYSTEMD-AUTOMOUNT | Add/Update fstab mount files
+  mount:
+    src: "{{ item.src }}"
+    path: "{{ item.path }}"
+    opts: "{{ item.opts | join(',') | default('defaults') }}"
+    fstab: "{{ item.fstab | default('yes') }}"
+    fstype: "{{ item.fstype }}"
+    passno: "{{ item.passno | default('0') }}"
+    dump: "{{ item.dump | default('0') }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: systemd_automount
+  when: systemd_automount.name in systemd_automount_enabled
+  notify: Reload systemctl
 
-- include: indirect.yml
-  when: autofs_indirect_maps is defined
+- name: SYSTEMD-AUTOMOUNT | Remove fstab mount files
+  mount:
+    src: "{{ item.src }}"
+    path: "{{ item.path }}"
+    opts: "{{ item.opts | join(',') | default('defaults') }}"
+    fstab: "{{ item.fstab | default('yes') }}"
+    fstype: "{{ item.fstype }}"
+    passno: "{{ item.passno | default('0') }}"
+    dump: "{{ item.dump | default('0') }}"
+    state: "absent"
+  with_items: systemd_automount
+  when: systemd_automount.name not in systemd_automount_enabled
+  notify: Reload systemctl

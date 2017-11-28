@@ -1,0 +1,9 @@
+[Unit]
+Description=Mount {{ name }}
+
+[Mount]
+What={{ source }}
+Where={{ destination }}
+
+[Install]
+WantedBy={{ target }}
