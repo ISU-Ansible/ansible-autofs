@@ -29,10 +29,13 @@
   roles:
     - role_under_test
 
+  pre_tasks:
+    - name: TEST | create /etc/fstab in docker
+      file:
+        path: /etc/fstab
+        state: 
+
   tasks:
-    - stat:
-        path: "/etc/fstab"
-      register: fstab
 
     - name: "TEST | Test Someserver"
       shell: "grep 'someserver' /etc/fstab"

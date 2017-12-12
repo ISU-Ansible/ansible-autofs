@@ -17,21 +17,5 @@
     systemd_automount_enabled:
       - "autostuff"
 
-  pre_tasks:
-    - name: TEST | Testing
-      package:
-        name: "{{item}}"
-        state: installed
-      with_items:
-        - "nfs-utils"
-    
-    - name: TEST | Testing 1
-      service:
-        name: "{{item}}"
-        state: started
-        enabled: yes
-      with_items:
-        - "rpcbind"
-
   roles:
     - role_under_test
