@@ -19,13 +19,6 @@
   assert:
     that: systemd_automount_os_supported == true
 
-- stat:
-    path: '/etc/fstab'
-  register: fstab_task
-
-- debug:
-    var: fstab_task
-
 - name: SYSTEMD-AUTOMOUNT | Create directory if it doesn't exist
   file:
     path: "{{ item.path }}"
@@ -54,7 +47,7 @@
     dump: "{{ item.dump | default('0') }}"
     state: "{{ item.state | default('present') }}"
   with_items: "{{ systemd_automount }}"
-  when: item.name in systemd_automount_enabled
+  when: item.name in systemd_automount_enabled 
   notify: Reload systemctl
 
 - name: SYSTEMD-AUTOMOUNT | Remove fstab mount files
