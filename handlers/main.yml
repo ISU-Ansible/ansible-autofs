@@ -1,15 +1,4 @@
 ---
-- name: Restart autofs
-  tags:
-    - services
-    - automount
-  service:
-    name: autofs
-    state: restarted
-
 - name: Reload systemctl
-  tags:
-    - services
-    - automount
   shell: systemctl daemon-reload && mount -a
   when: systemd_automount_allow_reload

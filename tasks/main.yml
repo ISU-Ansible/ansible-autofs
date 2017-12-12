@@ -19,11 +19,12 @@
   assert:
     that: systemd_automount_os_supported == true
 
-- debug:
-    var: systemd_automount
+- stat:
+    path: '/etc/fstab'
+  register: fstab_task
 
 - debug:
-    var: systemd_automount_enabled
+    var: fstab_task
 
 - name: SYSTEMD-AUTOMOUNT | Create directory if it doesn't exist
   file:
