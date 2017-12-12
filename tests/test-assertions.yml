@@ -3,29 +3,47 @@
   remote_user: root
 
   vars:
-    autofs_indirect_maps:
-      - name: stuff
+    systemd_automount:
+      - name: autostuff
+        src: "someserver:/stuff"
         path: "/stuff"
-        enabled: "true"
-        autofsoptions: "--timeout 1800"
-        mode: "0755"
+        fstype: nfs
+        opts:
+          - _netdev
+          - noauto
+          - x-systemd.automount
+          - x-systemd.idle-timeout=1min
+      - name: autootherstuff
+        src: "someotherserver:/otherstuff"
+        path: "/otherstuff"
+        fstype: smb
+        opts:
+          - _netdev
+          - x-systemd.automount
+          - noauto
+          - x-systemd.idle-timeout=1min
 
-    enabled_autofs_indirect_maps:
-      - "auto.stuff"
+    systemd_automount_enabled:
+      - "autostuff"
 
   roles:
     - role_under_test
 
   tasks:
     - stat:
-        path: "/etc/auto.master.d/stuff.autofs"
-      register: autostuff
+        path: "/etc/fstab"
+      register: fstab
 
-    - name: "TEST | Test File Defaults"
-      shell: "grep 'timeout 1800' /etc/auto.master.d/stuff.autofs"
-      register: autogrep
+    - name: "TEST | Test Someserver"
+      shell: "grep 'someserver' /etc/fstab"
+      register: someserver
+
+    - name: "TEST | Test Someotherserver"
+      shell: "grep 'someotherserver' /etc/fstab"
+      register: someotherserver
 
     - assert:
         that:
-          - "autostuff.stat.exists == true"
-          - "autogrep.rc == 0"
+          - "fstab.stat.exists == true"
+          - "someserver.rc == 0"
+          - "someotherserver.rc != 0"
