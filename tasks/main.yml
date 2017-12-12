@@ -33,14 +33,14 @@
     mode: "{{ item.mode | default('0755') }}"
     state: directory
   with_items: systemd_automount
-  when: systemd_automount.name in systemd_automount_enabled
+  when: item.name in systemd_automount_enabled
 
 - name: SYSTEMD-AUTOMOUNT | Remove unused directories
   file:
     path: "{{ item.path }}"
     state: absent
   with_items: systemd_automount
-  when: systemd_automount.name not in systemd_automount_enabled
+  when: item.name not in systemd_automount_enabled
 
 - name: SYSTEMD-AUTOMOUNT | Add/Update fstab mount files
   mount:
@@ -53,7 +53,7 @@
     dump: "{{ item.dump | default('0') }}"
     state: "{{ item.state | default('present') }}"
   with_items: systemd_automount
-  when: systemd_automount.name in systemd_automount_enabled
+  when: item.name in systemd_automount_enabled
   notify: Reload systemctl
 
 - name: SYSTEMD-AUTOMOUNT | Remove fstab mount files
@@ -67,5 +67,5 @@
     dump: "{{ item.dump | default('0') }}"
     state: "absent"
   with_items: systemd_automount
-  when: systemd_automount.name not in systemd_automount_enabled
+  when: item.name not in systemd_automount_enabled
   notify: Reload systemctl
