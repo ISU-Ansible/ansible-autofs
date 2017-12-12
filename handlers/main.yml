@@ -12,3 +12,4 @@
     - services
     - automount
   shell: systemctl daemon-reload && mount -a
+  when: systemd_automount_allow_reload

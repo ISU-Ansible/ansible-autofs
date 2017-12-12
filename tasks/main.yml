@@ -19,6 +19,12 @@
   assert:
     that: systemd_automount_os_supported == true
 
+- debug:
+    var: systemd_automount
+
+- debug:
+    var: systemd_automount_enabled
+
 - name: SYSTEMD-AUTOMOUNT | Create directory if it doesn't exist
   file:
     path: "{{ item.path }}"
