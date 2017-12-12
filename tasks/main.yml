@@ -10,6 +10,32 @@
     - "{{ ansible_os_family }}.yml"
     - default.yml
 
+- name: SYSTEMD-AUTOMOUNT | Set facts for systemd_autmount
+  set_fact:
+    systemd_automount_manage_service: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+    systemd_automount_allow_reload: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+
+- name: SYSTEMD-AUTOMOUNT | Assert that OS is supported
+  assert:
+    that: systemd_automount_os_supported == true
+
+- name: SYSTEMD-AUTOMOUNT | Create directory if it doesn't exist
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0755') }}"
+    state: directory
+  with_items: systemd_automount
+  when: systemd_automount.name in systemd_automount_enabled
+
+- name: SYSTEMD-AUTOMOUNT | Remove unused directories
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: systemd_automount
+  when: systemd_automount.name not in systemd_automount_enabled
+
 - name: SYSTEMD-AUTOMOUNT | Add/Update fstab mount files
   mount:
     src: "{{ item.src }}"

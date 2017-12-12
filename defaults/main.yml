@@ -1,18 +1,20 @@
 ---
 
 use_systemd_automount: {}
+systemd_automount: {}
+systemd_automount_enabled: {}
 
 # systemd_automount:
-#.  - name: somemount
-#.    src: example.com:/path/to/mount
+#   - name: somemount
+#     src: example.com:/path/to/mount
 #     path: /isilon
-#.    fstype: nfs
-#.    opts:
-#.      - _netdev
+#     fstype: nfs
+#     opts:
+#       - _netdev
 #       - noauto
 #       - x-systemd.automount
-#.      - x-systemd.idle-timeout=1min
+#       - x-systemd.idle-timeout=1min
 #       - krb5i
 #
 # systemd_automount_enabled:
-#.  - somemount
+#   - somemount
