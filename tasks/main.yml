@@ -1,5 +1,5 @@
 ---
-- name: SYSTEMD-AUTOMOUNT | Include OS-specific variables.
+- name: SYSTEMD MOUNT | Include OS-specific variables.
   include_vars: "{{item}}"
   with_first_found:
     - "{{ ansible_distribution }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
@@ -10,56 +10,28 @@
     - "{{ ansible_os_family }}.yml"
     - default.yml
 
-- name: SYSTEMD-AUTOMOUNT | Set facts for systemd_autmount
+- name: SYSTEMD MOUNT | Set facts for systemd_autmount
   set_fact:
-    systemd_automount_manage_service: "{{ false if ansible_virtualization_type == 'docker' else true }}"
-    systemd_automount_allow_reload: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+    systemd_mounts_manage_service: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+    systemd_mounts_allow_reload: "{{ false if ansible_virtualization_type == 'docker' else true }}"
 
-- name: SYSTEMD-AUTOMOUNT | Assert that OS is supported
+- name: SYSTEMD MOUNT | Assert that OS is supported
   assert:
     that: systemd_automount_os_supported == true
 
-- name: SYSTEMD-AUTOMOUNT | Create directory if it doesn't exist
-  file:
-    path: "{{ item.path }}"
-    owner: "{{ item.owner | default('root') }}"
-    group: "{{ item.group | default('root') }}"
-    mode: "{{ item.mode | default('0755') }}"
-    state: directory
-  with_items: "{{ systemd_automount }}"
-  when: item.name in systemd_automount_enabled
+# tasks file for systemd-mounts
+- name: Setup systemd Service for mountpoints
+  template:
+    src: systemd_mount.j2
+    dest: /etc/systemd/system/{{ item.value.mount[1:] | replace('/', "-") }}.mount
+  with_dict: "{{ systemd_mounts }}"
+  notify: Enable systemd mount
+  when: item.key is defined and item.key in systemd_mount_enabled
 
-- name: SYSTEMD-AUTOMOUNT | Remove unused directories
-  file:
-    path: "{{ item.path }}"
-    state: absent
-  with_items: "{{ systemd_automount }}"
-  when: item.name not in systemd_automount_enabled
-
-- name: SYSTEMD-AUTOMOUNT | Add/Update fstab mount files
-  mount:
-    src: "{{ item.src }}"
-    path: "{{ item.path }}"
-    opts: "{{ item.opts | join(',') | default('defaults') }}"
-    fstab: "{{ item.fstab | default('yes') }}"
-    fstype: "{{ item.fstype }}"
-    passno: "{{ item.passno | default('0') }}"
-    dump: "{{ item.dump | default('0') }}"
-    state: "{{ item.state | default('present') }}"
-  with_items: "{{ systemd_automount }}"
-  when: item.name in systemd_automount_enabled 
-  notify: Reload systemctl
-
-- name: SYSTEMD-AUTOMOUNT | Remove fstab mount files
-  mount:
-    src: "{{ item.src }}"
-    path: "{{ item.path }}"
-    opts: "{{ item.opts | join(',') | default('defaults') }}"
-    fstab: "{{ item.fstab | default('yes') }}"
-    fstype: "{{ item.fstype }}"
-    passno: "{{ item.passno | default('0') }}"
-    dump: "{{ item.dump | default('0') }}"
-    state: "absent"
-  with_items: "{{ systemd_automount }}"
-  when: item.name not in systemd_automount_enabled
-  notify: Reload systemctl
+- name: Setup systemd Service for automount
+  template:
+    src: systemd_automount.j2
+    dest: /etc/systemd/system/{{ item.value.mount[1:] | replace('/', "-") }}.automount
+  with_dict: "{{ systemd_mounts }}"
+  notify: Enable systemd automount
+when: item.value.automount is defined

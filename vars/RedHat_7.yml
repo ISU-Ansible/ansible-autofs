@@ -1,3 +1,2 @@
 ---
 systemd_automount_os_supported: true
-use_systemd_automount: true

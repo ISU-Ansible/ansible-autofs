@@ -1,9 +1,12 @@
 [Unit]
-Description=Mount {{ name }}
+Description=Mount {{ item.key }}
+After=network.target multi-user.target
 
 [Mount]
-What={{ source }}
-Where={{ destination }}
+What={{ item.value.share }}
+Where={{ item.value.mount }}
+Type={{ item.value.type | default ('mounts_type') }}
+Options={{ item.value.options | default ('mounts_options') }}
 
 [Install]
-WantedBy={{ target }}
+WantedBy=default.target

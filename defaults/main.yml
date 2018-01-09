@@ -1,9 +1,33 @@
 ---
 
-use_systemd_automount: {}
-systemd_automount: {}
-systemd_automount_enabled: {}
+systemd_mounts: {}
+systemd_mounts_enabled: {}
 
+systemd_mounts_manage_service: {}
+systemd_mounts_allow_reload: {}
+
+
+#
+# systemd_mounts:
+#   Mount1:
+#     share: //server/service$
+#     mount: /somemountpoint
+#     type: cifs
+#     options:
+#       - domain=local
+#       - username=user
+#       - password=pass
+#       - uid=1000
+#       - gid=1000
+#     automount: true
+#   Mount2:
+#     share: someserver:/export
+#     mount: /someothermountpoint
+#     type: nfs
+#     options:
+#       - uid=1000
+#     automount: false
+#
 # systemd_automount:
 #   - name: somemount
 #     src: example.com:/path/to/mount
