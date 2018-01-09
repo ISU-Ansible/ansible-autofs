@@ -30,24 +30,19 @@
   roles:
     - role_under_test
 
-  pre_tasks:
-    - name: TEST | create /etc/fstab in docker
-      file:
-        path: /etc/fstab
-        state: 
-
   tasks:
 
-    - name: "TEST | Test Someserver"
-      shell: "grep 'someserver' /etc/fstab"
-      register: someserver
+    - name: "TEST | Mount1"
+      stat:
+        path: "/etc/systemd/system/somemountpoint.mount"
+      register: somemountpoint
 
-    - name: "TEST | Test Someotherserver"
-      shell: "grep 'someotherserver' /etc/fstab"
-      register: someotherserver
+    - name: "TEST | Mount2"
+      stat:
+        path: "/etc/systemd/system/someothermountpoint.mount"
+      register: someothermountpoint
 
     - assert:
         that:
-          - "fstab.stat.exists == true"
-          - "someserver.rc == 0"
-          - "someotherserver.rc != 0"
+          - "somserver.stat.exists == true"
+          - "someotherserver.stat.exists == true"
