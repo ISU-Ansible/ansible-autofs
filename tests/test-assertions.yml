@@ -3,28 +3,29 @@
   remote_user: root
 
   vars:
-    systemd_automount:
-      - name: autostuff
-        src: "someserver:/stuff"
-        path: "/stuff"
-        fstype: nfs
-        opts:
-          - _netdev
-          - noauto
-          - x-systemd.automount
-          - x-systemd.idle-timeout=1min
-      - name: autootherstuff
-        src: "someotherserver:/otherstuff"
-        path: "/otherstuff"
-        fstype: smb
-        opts:
-          - _netdev
-          - x-systemd.automount
-          - noauto
-          - x-systemd.idle-timeout=1min
+    systemd_mounts:
+     Mount1:
+       share: //server/service$
+       mount: /somemountpoint
+       type: cifs
+       options:
+         - domain=local
+         - username=user
+         - password=pass
+         - uid=1000
+         - gid=1000
+       automount: true
+     Mount2:
+       share: someserver:/export
+       mount: /someothermountpoint
+       type: nfs
+       options:
+         - uid=1000
+       automount: false
 
-    systemd_automount_enabled:
-      - "autostuff"
+    systemd_mounts_enabled:
+      - Mount1
+      - Mount2
 
   roles:
     - role_under_test

@@ -26,7 +26,7 @@
     dest: /etc/systemd/system/{{ item.value.mount[1:] | replace('/', "-") }}.mount
   with_dict: "{{ systemd_mounts }}"
   notify: Enable systemd mount
-  when: item.key is defined and item.key in systemd_mount_enabled
+  when: item.key is defined and item.key in systemd_mounts_enabled
 
 - name: Setup systemd Service for automount
   template:
@@ -34,4 +34,4 @@
     dest: /etc/systemd/system/{{ item.value.mount[1:] | replace('/', "-") }}.automount
   with_dict: "{{ systemd_mounts }}"
   notify: Enable systemd automount
-when: item.value.automount is defined
+when: item.value.automount is defined and item.key in systemd_mounts_enabled

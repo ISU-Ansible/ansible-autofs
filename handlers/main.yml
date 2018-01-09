@@ -1,4 +1,29 @@
 ---
-- name: Reload systemctl
-  shell: systemctl daemon-reload && mount -a
-  when: systemd_automount_allow_reload
+# handlers file for systemd-mounts
+- name: Reload systemd
+  systemd: 
+    daemon_reload: yes
+
+- name: Enable systemd mount
+  command: systemctl enable  "{{ item.value.mount[1:] | replace('/', "-") }}.mount"
+  with_dict: "{{ mounts }}"
+  notify: Start systemd mount
+  when: item.value.automount == false
+
+- name: Start systemd mount
+  command: systemctl start  "{{ item.value.mount[1:] | replace('/', "-") }}.mount"
+  with_dict: "{{ mounts }}"
+  notify: Reload systemd
+  when: item.value.automount == false
+
+- name: Enable systemd automount
+  command: systemctl enable  "{{ item.value.mount[1:] | replace('/', "-") }}.automount"
+  with_dict: "{{ mounts }}"
+  notify: Start systemd automount
+  when: item.value.automount == true
+
+- name: Start systemd automount
+  command: systemctl start  "{{ item.value.mount[1:] | replace('/', "-") }}.automount"
+  with_dict: "{{ mounts }}"
+  notify: Reload systemd
+when: item.value.automount == true
