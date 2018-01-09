@@ -44,5 +44,5 @@
 
     - assert:
         that:
-          - "somserver.stat.exists == true"
-          - "someotherserver.stat.exists == true"
+          - "smounepointpoint.stat.exists == true"
+          - "someothermountpoint.stat.exists == true"
