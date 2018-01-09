@@ -26,4 +26,4 @@
   command: systemctl start  "{{ item.value.mount[1:] | replace('/', "-") }}.automount"
   with_dict: "{{ mounts }}"
   notify: Reload systemd
-when: item.value.automount == true
+  when: item.value.automount == true
