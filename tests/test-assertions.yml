@@ -12,7 +12,7 @@
          - domain=local
          - username=user
          - password=pass
-         - uid=1000
+         - uid=1001
          - gid=1000
        automount: true
      Mount2:
@@ -42,13 +42,17 @@
         path: "/etc/systemd/system/someothermountpoint.mount"
       register: someothermountpoint
 
-    - debug:
-        var: somemountpoint
+    - name: "TEST | Mount1 Contents"
+      command: "grep 'uid=1001,gid=1000' /etc/systemd/system/somemountpoint.mount"
+      register: mount1contents
 
-    - debug:
-        var: someothermountpoint
+    - name: "TEST | Mount2 Contents"
+      command: "grep '/someothermountpoint' /etc/systemd/system/someothermountpoint.mount"
+      register: mount2contents
 
     - assert:
         that:
           - "somemountpoint.stat.exists == true"
           - "someothermountpoint.stat.exists == true"
+          - "mount1contents.rc == 0"
+          - "mount2contents.rc == 0"
