@@ -22,7 +22,7 @@
 # tasks file for systemd-mounts
 - name: Setup systemd Service for mountpoints
   template:
-    src: systemd_mount.j2
+    src: systemd.mount.j2
     dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('/', '-') }}.mount"
   with_dict: "{{ systemd_mounts }}"
   notify: Enable systemd mount
@@ -30,7 +30,7 @@
 
 - name: Setup systemd Service for automount
   template:
-    src: systemd_automount.j2
+    src: systemd.automount.j2
     dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('/', '-') }}.automount"
   with_dict: "{{ systemd_mounts }}"
   notify: Enable systemd automount
