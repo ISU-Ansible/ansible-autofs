@@ -42,6 +42,12 @@
         path: "/etc/systemd/system/someothermountpoint.mount"
       register: someothermountpoint
 
+    - debug:
+        var: somemountpoint
+
+    - debug:
+        var: someothermountpoint
+
     - assert:
         that:
           - "smounepointpoint.stat.exists == true"
