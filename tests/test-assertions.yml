@@ -50,5 +50,5 @@
 
     - assert:
         that:
-          - "smounepointpoint.stat.exists == true"
+          - "somemountpoint.stat.exists == true"
           - "someothermountpoint.stat.exists == true"
