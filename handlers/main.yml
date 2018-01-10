@@ -3,28 +3,30 @@
 - name: Reload systemd
   systemd: 
     daemon_reload: yes
-  when: systemd_mounts_manage_service == true
-
-- name: Enable systemd mount
-  command: systemctl enable "{{ item.value.mount[1:] | replace('/', "-") }}.mount"
-  with_dict: "{{ systemd_mounts }}"
-  notify: Start systemd mount
-  when: item.value.automount == false and systemd_mounts_manage_service == true
+  when: systemd_mounts_manage_service
 
 - name: Start systemd mount
   command: systemctl start "{{ item.value.mount[1:] | replace('/', "-") }}.mount"
   with_dict: "{{ systemd_mounts }}"
-  notify: Reload systemd
-  when: item.value.automount == false and systemd_mounts_manage_service == true
-
-- name: Enable systemd automount
-  command: systemctl enable "{{ item.value.mount[1:] | replace('/', "-") }}.automount"
-  with_dict: "{{ systemd_mounts }}"
-  notify: Start systemd automount
-  when: item.value.automount == true and systemd_mounts_manage_service == true
+  when: systemd_mounts_manage_service
 
 - name: Start systemd automount
   command: systemctl start "{{ item.value.mount[1:] | replace('/', "-") }}.automount"
   with_dict: "{{ systemd_mounts }}"
-  notify: Reload systemd
-  when: item.value.automount == true and systemd_mounts_manage_service == true
+  when: systemd_mounts_manage_service
+
+- name: Enable systemd mount
+  command: systemctl enable "{{ item.value.mount[1:] | replace('/', "-") }}.mount"
+  with_dict: "{{ systemd_mounts }}"
+  notify: 
+    - Reload systemd
+    - Start systemd mount
+  when: item.value.automount == false
+
+- name: Enable systemd automount
+  command: systemctl enable "{{ item.value.mount[1:] | replace('/', "-") }}.automount"
+  with_dict: "{{ systemd_mounts }}"
+  notify: 
+    - Reload systemd
+    - Start systemd automount
+  when: item.value.automount == true

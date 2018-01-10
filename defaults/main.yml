@@ -28,17 +28,5 @@ systemd_mounts_allow_reload: {}
 #       - uid=1000
 #     automount: false
 #
-# systemd_automount:
-#   - name: somemount
-#     src: example.com:/path/to/mount
-#     path: /isilon
-#     fstype: nfs
-#     opts:
-#       - _netdev
-#       - noauto
-#       - x-systemd.automount
-#       - x-systemd.idle-timeout=1min
-#       - krb5i
-#
-# systemd_automount_enabled:
-#   - somemount
+# systemd_mounts_enabled:
+#   - Mount1
