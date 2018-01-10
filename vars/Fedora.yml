@@ -1,2 +1,7 @@
 ---
 systemd_automount_os_supported: true
+
+systemd_mount_packages:
+  - cifs-utils
+  - nfs-utils
+  - nfs4-acl-tools
