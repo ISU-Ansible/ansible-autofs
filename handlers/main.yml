@@ -1,7 +1,7 @@
 ---
 # handlers file for systemd-mounts
 - name: Reload systemd
-  systemd: 
+  systemd:
     daemon_reload: yes
   when: systemd_mounts_manage_service
 
@@ -18,7 +18,7 @@
 - name: Enable systemd mount
   command: systemctl enable "{{ item.value.mount[1:] | replace('/', "-") }}.mount"
   with_dict: "{{ systemd_mounts }}"
-  notify: 
+  notify:
     - Reload systemd
     - Start systemd mount
   when: item.value.automount == false
@@ -26,7 +26,19 @@
 - name: Enable systemd automount
   command: systemctl enable "{{ item.value.mount[1:] | replace('/', "-") }}.automount"
   with_dict: "{{ systemd_mounts }}"
-  notify: 
+  notify:
     - Reload systemd
     - Start systemd automount
   when: item.value.automount == true
+
+- name: Reload autofs
+  systemd:
+    name: autofs
+    state: reloaded
+  when: autofs_mounts_manage_service
+
+- name: Restart autofs
+  systemd:
+    name: autofs
+    state: restarted
+  when: autofs_mounts_manage_service

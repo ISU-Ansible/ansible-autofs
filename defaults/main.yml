@@ -36,7 +36,7 @@ autofs_mounts_allow_reload: {}
 #
 # systemd_mounts_enabled:
 #   - Mount1
-
+#
 # use_autofs_mounts: true
 #
 # autofs_mounts:
