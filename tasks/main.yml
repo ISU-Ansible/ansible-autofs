@@ -1,48 +1,8 @@
 ---
-- name: SYSTEMD MOUNT | Include OS-specific variables.
-  include_vars: "{{item}}"
-  with_first_found:
-    - "{{ ansible_distribution }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
-    - "{{ ansible_distribution }}_{{ ansible_distribution_major_version}}.yml"
-    - "{{ ansible_distribution }}.yml"
-    - "{{ ansible_os_family }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
-    - "{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml"
-    - "{{ ansible_os_family }}.yml"
-    - default.yml
+- name: Include Systemd Mounts
+  include_tasks: systemd_mounts.yml
+  when: use_systemd_mounts
 
-- name: SYSTEMD MOUNT | Set facts for systemd_autmount
-  set_fact:
-    systemd_mounts_manage_service: "{{ false if ansible_virtualization_type == 'docker' else true }}"
-    systemd_mounts_allow_reload: "{{ false if ansible_virtualization_type == 'docker' else true }}"
-
-- name: SYSTEMD MOUNT | Assert that OS is supported
-  assert:
-    that: systemd_automount_os_supported == true
-
-#
-# Install packages
-#
-- name: SYSTEMD MOUNT | Install needed packages
-  package:
-    name: "{{ item }}"
-    state: installed
-  with_items: "{{ systemd_mount_packages }}"
-
-#
-# tasks for mounts
-#
-- name: SYSTEMD MOUNT | Setup systemd Service for mountpoints
-  template:
-    src: systemd.mount.j2
-    dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('/', '-') }}.mount"
-  with_dict: "{{ systemd_mounts }}"
-  notify: Enable systemd mount
-  when: item.key is defined and item.key in systemd_mounts_enabled
-
-- name: SYSTEMD MOUNT | Setup systemd Service for automount
-  template:
-    src: systemd.automount.j2
-    dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('/', '-') }}.automount"
-  with_dict: "{{ systemd_mounts }}"
-  notify: Enable systemd automount
-  when: item.value.automount is defined and item.key in systemd_mounts_enabled
+- name: Include Autofs Mounts
+  include_tasks: autofs_mounts.yml
+  when: use_autofs_mounts

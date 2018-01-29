@@ -1,3 +1,1 @@
 ---
-systemd_automount_os_supported: false
-use_systemd_automount: false

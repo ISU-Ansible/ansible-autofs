@@ -1,0 +1,48 @@
+---
+- name: AUTOFS MOUNT | Include OS-specific variables.
+  include_vars: "{{item}}"
+  with_first_found:
+    - "{{ ansible_distribution }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
+    - "{{ ansible_distribution }}_{{ ansible_distribution_major_version}}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
+    - "{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - default.yml
+
+- name: AUTOFS MOUNT | Set facts for autofs_automount
+  set_fact:
+    autofs_mounts_manage_service: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+    autofs_mounts_allow_reload: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+
+- name: AUTOFS MOUNT | Assert that OS is supported
+  assert:
+    that: autofs_automount_os_supported == true
+
+#
+# Install packages
+#
+- name: AUTOFS MOUNT | Install needed packages
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items: "{{ autofs_mount_packages }}"
+
+#
+# tasks for mounts
+#
+- name: AUTOFS MOUNT | Setup autofs Service for mountpoints
+  template:
+    src: autofs.mount.j2
+    dest: "/etc/autofs/system/{{ item.value.mount[1:] | replace('/', '-') }}.mount"
+  with_dict: "{{ autofs_mounts }}"
+  notify: Enable autofs mount
+  when: item.key is defined and item.key in autofs_mounts_enabled
+
+- name: AUTOFS MOUNT | Setup autofs Service for automount
+  template:
+    src: autofs.automount.j2
+    dest: "/etc/autofs/system/{{ item.value.mount[1:] | replace('/', '-') }}.automount"
+  with_dict: "{{ autofs_mounts }}"
+  notify: Enable autofs automount
+  when: item.value.automount is defined and item.key in autofs_mounts_enabled

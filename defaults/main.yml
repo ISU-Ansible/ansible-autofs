@@ -1,12 +1,18 @@
 ---
 
+use_systemd_mounts: false
 systemd_mounts: {}
 systemd_mounts_enabled: {}
-
 systemd_mounts_manage_service: {}
 systemd_mounts_allow_reload: {}
 
+use_autofs_mounts: false
+autofs_mounts: {}
+autofs_mounts_enabled: {}
+autofs_mounts_manage_service: {}
+autofs_mounts_allow_reload: {}
 
+# use_systemd_mounts: true
 #
 # systemd_mounts:
 #   Mount1:
@@ -30,3 +36,26 @@ systemd_mounts_allow_reload: {}
 #
 # systemd_mounts_enabled:
 #   - Mount1
+
+# use_autofs_mounts: true
+#
+# autofs_mounts:
+#   Mount1:
+#    share: //server/service$
+#    mount: /somemountpoint
+#    type: cifs
+#    options:
+#      - domain=local
+#      - username=user
+#      - password=pass
+#      - uid=1000
+#      - gid=1000
+#  Mount2:
+#    share: someserver:/export
+#    mount: /someothermountpoint
+#    type: nfs
+#    options:
+#      - uid=1000
+#
+# autofs_mounts_enabled:
+#   - Mount2
