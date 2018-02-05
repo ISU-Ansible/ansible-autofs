@@ -36,11 +36,12 @@
 
 #
 # tasks for mounts
+# systemd uses - for dir separator, so dirs with dashes need escaped according to systemd-escape rules
 #
 - name: SYSTEMD MOUNT | Setup systemd Service for mountpoints
   template:
     src: systemd.mount.j2
-    dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('/', '-') }}.mount"
+    dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', '-') }}.mount"
   with_dict: "{{ systemd_mounts }}"
   notify: Enable systemd mount
   when: item.value.automount == false and item.key in systemd_mounts_enabled
@@ -48,7 +49,7 @@
 - name: SYSTEMD MOUNT | Setup systemd Service for automount
   template:
     src: systemd.automount.j2
-    dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('/', '-') }}.automount"
+    dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', '-') }}.automount"
   with_dict: "{{ systemd_mounts }}"
   notify: Enable systemd automount
   when: item.value.automount is defined and item.value.automount == true and item.key in systemd_mounts_enabled

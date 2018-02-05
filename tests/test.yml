@@ -22,10 +22,18 @@
        options:
          - uid=1000
        automount: false
-
+     Mount3:
+       share: someserver:/export
+       mount: /someother-mountpoint
+       type: nfs
+       options:
+         - uid=1000
+       automount: false
+       
     systemd_mounts_enabled:
       - Mount1
       - Mount2
+      - Mount3
 
   roles:
     - role_under_test
