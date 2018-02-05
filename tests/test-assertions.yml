@@ -73,14 +73,14 @@
       register: mount2contents
 
     - name: "TEST | Mount3 Contents"
-      command: "grep '/another-mountpoint' /etc/systemd/system/another\\\\x2dmountpoint.mount"
+      command: "grep '/another-mountpoint' /etc/systemd/system/another\\x2dmountpoint.mount"
       register: mount3contents
 
     - assert:
         that:
           - "somemountpoint.stat.exists == true"
           - "someothermountpoint.stat.exists == true"
-          - "someother-mountpoint.stat.exists == true"
+          - "another-mountpoint.stat.exists == true"
           - "mount1contents.rc == 0"
           - "mount2contents.rc == 0"
           - "mount3contents.rc == 0"
