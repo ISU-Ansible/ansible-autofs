@@ -24,10 +24,17 @@
        options:
          - uid=1000
        automount: false
-
+     Mount3:
+       share: someserver:/export
+       mount: /someother-mountpoint
+       type: nfs
+       options:
+         - uid=1000
+       automount: false
     systemd_mounts_enabled:
-      - Mount2
       - Mount1
+      - Mount2
+      - Mount3
 
   roles:
     - role_under_test
@@ -44,6 +51,11 @@
         path: "/etc/systemd/system/someothermountpoint.mount"
       register: someothermountpoint
 
+    - name: "TEST | Mount3"
+      stat:
+        path: "/etc/systemd/system/someother\\x2dmountpoint.mount"
+      register: someother-mountpoint
+
     - name: "TEST | Mount1 Contents"
       command: "grep 'uid=1001,gid=1000' /etc/systemd/system/somemountpoint.mount"
       register: mount1contents
@@ -52,9 +64,15 @@
       command: "grep '/someothermountpoint' /etc/systemd/system/someothermountpoint.mount"
       register: mount2contents
 
+    - name: "TEST | Mount3 Contents"
+      command: "grep '/someother-mountpoint' /etc/systemd/system/someother\\x2dmountpoint.mount"
+      register: mount3contents
+
     - assert:
         that:
           - "somemountpoint.stat.exists == true"
           - "someothermountpoint.stat.exists == true"
+          - "someother-mountpoint.stat.exists == true"
           - "mount1contents.rc == 0"
           - "mount2contents.rc == 0"
+          - "mount3contents.rc == 0"
