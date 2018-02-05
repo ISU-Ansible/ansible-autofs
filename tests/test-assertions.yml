@@ -3,6 +3,8 @@
   remote_user: root
 
   vars:
+    use_systemd_mounts: true
+    
     systemd_mounts:
      Mount1:
        share: //server/service$
