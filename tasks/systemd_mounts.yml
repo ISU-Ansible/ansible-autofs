@@ -19,6 +19,12 @@
   assert:
     that: systemd_automount_os_supported == true
 
+- name: SYSTEMD MOUNT | Assert that systemd_mounts_enabled and systemd_automounts_enabled are unique
+  assert:
+    that:
+      - systemd_mounts_enabled | difference(systemd_automounts_enabled) == systemd_mounts_enabled
+      - systemd_automounts_enabled | difference(systemd_mounts_enabled) == systemd_automounts_enabled
+
 #
 # Install packages
 #
@@ -38,7 +44,7 @@
     dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', '-') }}.mount"
   with_dict: "{{ systemd_mounts }}"
   notify: Enable systemd mount
-  when: item.key is defined and item.key in systemd_mounts_enabled
+  when: item.value.automount == false and item.key in systemd_mounts_enabled
 
 - name: SYSTEMD MOUNT | Setup systemd Service for automount
   template:
@@ -46,4 +52,4 @@
     dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', '-') }}.automount"
   with_dict: "{{ systemd_mounts }}"
   notify: Enable systemd automount
-  when: item.value.automount is defined and item.key in systemd_mounts_enabled
+  when: item.value.automount is defined and item.value.automounts == true and item.key in systemd_mounts_enabled
