@@ -24,8 +24,8 @@
        automount: false
 
     systemd_mounts_enabled:
-      - Mount1
       - Mount2
+      - Mount1
 
   roles:
     - role_under_test

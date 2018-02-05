@@ -2,7 +2,8 @@
 
 use_systemd_mounts: false
 systemd_mounts: {}
-systemd_mounts_enabled: {}
+systemd_mounts_enabled: []
+systemd_automounts_enabled: []
 systemd_mounts_manage_service: {}
 systemd_mounts_allow_reload: {}
 
