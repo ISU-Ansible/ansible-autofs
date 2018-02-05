@@ -90,8 +90,8 @@
         that:
           - "somemountpoint.stat.exists == true"
           - "somemountpoint_automount.stat.exists == true"
-          - "someoutmountpoint.stat.exists == true"
-          - "someoutmountpoint_automount.stat.exists == false"
+          - "someothermountpoint.stat.exists == true"
+          - "someothermountpoint_automount.stat.exists == false"
           - "mount1contents.rc == 0"
           - "mount2contents.rc == 0"
           - "mount3contents.rc == 0"
