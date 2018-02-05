@@ -54,18 +54,25 @@
         path: "/etc/systemd/system/somemountpoint.mount"
       register: somemountpoint
 
+    - name: "TEST | Mount1 Automount"
+      stat:
+        path: "/etc/systemd/system/somemountpoint.automount"
+      register: somemountpoint_automount
+
     - name: "TEST | Mount2"
       stat:
         path: "/etc/systemd/system/someothermountpoint.mount"
       register: someothermountpoint
 
+    - name: "TEST | Mount2 Automount"
+      stat:
+        path: "/etc/systemd/system/someothermountpoint.automount"
+      register: someothermountpoint_automount
+
     - name: "TEST | Mount3"
       stat:
-        path: '/etc/systemd/system/another\\x2dmountpoint.mount'
+        path: "/etc/systemd/system/another\\\\x2dmountpoint.mount"
       register: another-mountpoint
-
-    - debug:
-        var: another-mountpoint
 
     - name: "TEST | Mount1 Contents"
       command: "grep 'uid=1001,gid=1000' /etc/systemd/system/somemountpoint.mount"
@@ -82,8 +89,9 @@
     - assert:
         that:
           - "somemountpoint.stat.exists == true"
-          - "someothermountpoint.stat.exists == true"
-          - "another-mountpoint.stat.exists == true"
+          - "somemountpoint_automount.stat.exists == true"
+          - "someoutmountpoint.stat.exists == true"
+          - "someoutmountpoint_automount.stat.exists == false"
           - "mount1contents.rc == 0"
           - "mount2contents.rc == 0"
           - "mount3contents.rc == 0"
