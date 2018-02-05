@@ -3,6 +3,8 @@
   remote_user: root
 
   vars:
+    use_systemd_mounts: true
+
     systemd_mounts:
      Mount1:
        share: //server/service$
@@ -12,7 +14,7 @@
          - domain=local
          - username=user
          - password=pass
-         - uid=1000
+         - uid=1001
          - gid=1000
        automount: true
      Mount2:
@@ -24,12 +26,12 @@
        automount: false
      Mount3:
        share: someserver:/export
-       mount: /someother-mountpoint
+       mount: /another-mountpoint
        type: nfs
        options:
          - uid=1000
        automount: false
-       
+
     systemd_mounts_enabled:
       - Mount1
       - Mount2

@@ -26,11 +26,12 @@
        automount: false
      Mount3:
        share: someserver:/export
-       mount: /someother-mountpoint
+       mount: /another-mountpoint
        type: nfs
        options:
          - uid=1000
        automount: false
+
     systemd_mounts_enabled:
       - Mount1
       - Mount2
@@ -47,7 +48,7 @@
 
     - debug:
         var: system_ls
-        
+
     - name: "TEST | Mount1"
       stat:
         path: "/etc/systemd/system/somemountpoint.mount"
@@ -60,8 +61,8 @@
 
     - name: "TEST | Mount3"
       stat:
-        path: "/etc/systemd/system/someother\\x2dmountpoint.mount"
-      register: someother-mountpoint
+        path: "/etc/systemd/system/another\\x2dmountpoint.mount"
+      register: another-mountpoint
 
     - name: "TEST | Mount1 Contents"
       command: "grep 'uid=1001,gid=1000' /etc/systemd/system/somemountpoint.mount"
@@ -72,7 +73,7 @@
       register: mount2contents
 
     - name: "TEST | Mount3 Contents"
-      command: "grep '/someother-mountpoint' /etc/systemd/system/someother\\x2dmountpoint.mount"
+      command: "grep '/another-mountpoint' /etc/systemd/system/another\\x2dmountpoint.mount"
       register: mount3contents
 
     - assert:
