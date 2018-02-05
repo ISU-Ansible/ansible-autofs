@@ -4,7 +4,7 @@
 
   vars:
     use_systemd_mounts: true
-    
+
     systemd_mounts:
      Mount1:
        share: //server/service$
@@ -41,6 +41,13 @@
 
   tasks:
 
+    - name: "TEST | Debug"
+      command: "ls -la /etc/systemd/system"
+      register: system_ls
+
+    - debug:
+        var: system_ls
+        
     - name: "TEST | Mount1"
       stat:
         path: "/etc/systemd/system/somemountpoint.mount"
