@@ -30,6 +30,7 @@
 
 #
 # tasks for mounts
+# systemd uses - for dir separator, so dirs with dashes need escaped according to systemd-escape rules
 #
 - name: SYSTEMD MOUNT | Setup systemd Service for mountpoints
   template:

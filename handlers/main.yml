@@ -1,5 +1,6 @@
 ---
 # handlers file for systemd-mounts
+# systemd uses - for dir separator, so dirs with dashes need escaped according to systemd-escape rules
 - name: Reload systemd
   systemd:
     daemon_reload: yes
