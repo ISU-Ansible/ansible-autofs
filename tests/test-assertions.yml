@@ -64,6 +64,9 @@
         path: '/etc/systemd/system/another\\\\x2dmountpoint.mount'
       register: another-mountpoint
 
+    - debug:
+        var: another-mountpoint
+
     - name: "TEST | Mount1 Contents"
       command: "grep 'uid=1001,gid=1000' /etc/systemd/system/somemountpoint.mount"
       register: mount1contents
