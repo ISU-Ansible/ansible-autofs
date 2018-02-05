@@ -61,7 +61,7 @@
 
     - name: "TEST | Mount3"
       stat:
-        path: '/etc/systemd/system/another\\x2dmountpoint.mount'
+        path: '/etc/systemd/system/another\\\\x2dmountpoint.mount'
       register: another-mountpoint
 
     - name: "TEST | Mount1 Contents"
