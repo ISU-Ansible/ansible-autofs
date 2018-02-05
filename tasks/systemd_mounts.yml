@@ -40,7 +40,7 @@
     dest: "/etc/systemd/system/{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', '-') }}.mount"
   with_dict: "{{ systemd_mounts }}"
   notify: Enable systemd mount
-  when: item.value.automount is defined and item.value.automount == false and item.key in systemd_mounts_enabled
+  when: item.key in systemd_mounts_enabled
 
 - name: SYSTEMD MOUNT | Setup systemd Service for automount
   template:
