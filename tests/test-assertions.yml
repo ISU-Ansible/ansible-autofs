@@ -46,9 +46,6 @@
       command: "ls -la /etc/systemd/system"
       register: system_ls
 
-    - debug:
-        var: system_ls
-
     - name: "TEST | Mount1"
       stat:
         path: "/etc/systemd/system/somemountpoint.mount"
