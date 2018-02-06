@@ -48,9 +48,51 @@ This role also installs the following:
 * cifs-utils
 
 
-**Note**: Any mountpoint enabled for both autofs and systemd **should **be
+**Note**: Any mountpoint enabled for both autofs and systemd **should** be
 handled by the autofs daemon, but it is not recommended to enable both
 at the same time as this is not supported.
+
+
+
+
+## Usage
+
+
+    - hosts: all
+      vars:
+        use_systemd_mounts: true
+        systemd_mounts:
+          Mount1:
+            share: //server/service$
+            mount: /somemountpoint
+            type: cifs
+            options:
+              - domain=local
+              - username=user
+              - password=pass
+              - uid=1001
+              - gid=1000
+            automount: true
+          Mount2:
+            share: someserver:/export
+            mount: /someothermountpoint
+            type: nfs
+            options:
+              - uid=1000
+            automount: false
+          Mount3:
+            share: someserver:/export
+            mount: /another-mountpoint
+            type: nfs
+            options:
+              - uid=1000
+            automount: false
+        systemd_mounts_enabled:
+          - Mount1
+          - Mount2
+          - Mount3
+      roles:
+        - ISU-Ansible.ansible-autofs
 
 
 
@@ -102,8 +144,6 @@ The following variables are used in testing.
 
 
     use_autofs_mounts: true
-
-
     autofs_mounts:
      Mount2:
        share: someserver:/export
@@ -111,8 +151,6 @@ The following variables are used in testing.
        type: nfs
        options:
          - uid=1000
-
-
     autofs_mounts_enabled:
       - Mount2
 
@@ -216,3 +254,82 @@ The *Enable systemd mount* and *Start systemd mount* handlers are run on any
 mount that does not have the 'automount' directive set to false, or not set.
 Alternatively, the *Start systemd automount* and *Enable systemd automount*
 handlers are run on mounts that have the 'automount' directive set to true.
+
+
+**NOTE**: systemd uses a dash ('-') as a directory separator. Directories
+that incldue dashes in their path need to be escaped according to the 
+systemd-escape rules (man systemd-escape).
+
+
+
+
+## Templates
+
+
+There are four separate templates for this role -- two for systemd and two
+for autofs.
+
+
+The systemd templates manage the .mount and .automount files that are to be
+placed in the ```/etc/systemd/system``` directory. These handle the location
+of the mountpoints, the options,
+
+
+### systemd.mount.j2
+
+
+If any alterations need to be made to this template, please submit a pull
+request noting the changes and the reason for those changes.
+
+
+    [Unit]
+    Description=Mount {{ item.key }}
+    After=network.target multi-user.target
+
+
+    [Mount]
+    What={{ item.value.share }}
+    Where={{ item.value.mount }}
+    Type={{ item.value.type | default ('mounts_type') }}
+    Options={{ item.value.options | join(',') | default ('mounts_options') }}
+
+
+    [Install]
+    WantedBy=default.target
+
+
+### systemd.automount.j2
+
+
+    [Unit]
+    Description=Automount {{ item.key }}
+    After=network.target multi-user.target
+
+
+    [Automount]
+    Where={{ item.value.mount }}
+
+
+    [Install]
+    WantedBy=default.target
+
+
+### auto.master.j2
+
+
+To configure items for the autofs daemon, we add auto.master items into the
+/etc/auto.master.d directory, so that we don't need to completely reconfigure
+/etc/auto.master each time a new mount is created.
+
+
+    {{ item.key | lower }} /etc/auto.{{ item.key | lower }}
+
+
+### auto.mount.j2
+
+
+The actual map file is put in /etc/auto.x, where x is the mountpoint with
+dashes ('-') instead of slashes ('/') separating the file path.
+
+
+    {{ item.value.mount[1:] }} {{ item.value.options | join(",") }} {{ item.value.share }}

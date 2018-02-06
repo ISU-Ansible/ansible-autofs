@@ -37,9 +37,48 @@
 #* * nfs4-acl-tools
 #* * cifs-utils
 #*
-#* **Note**: Any mountpoint enabled for both autofs and systemd **should **be
+#* **Note**: Any mountpoint enabled for both autofs and systemd **should** be
 #* handled by the autofs daemon, but it is not recommended to enable both
 #* at the same time as this is not supported.
+#*
+#*
+#* ## Usage
+#*
+#*     - hosts: all
+#*       vars:
+#*         use_systemd_mounts: true
+#*         systemd_mounts:
+#*           Mount1:
+#*             share: //server/service$
+#*             mount: /somemountpoint
+#*             type: cifs
+#*             options:
+#*               - domain=local
+#*               - username=user
+#*               - password=pass
+#*               - uid=1001
+#*               - gid=1000
+#*             automount: true
+#*           Mount2:
+#*             share: someserver:/export
+#*             mount: /someothermountpoint
+#*             type: nfs
+#*             options:
+#*               - uid=1000
+#*             automount: false
+#*           Mount3:
+#*             share: someserver:/export
+#*             mount: /another-mountpoint
+#*             type: nfs
+#*             options:
+#*               - uid=1000
+#*             automount: false
+#*         systemd_mounts_enabled:
+#*           - Mount1
+#*           - Mount2
+#*           - Mount3
+#*       roles:
+#*         - ISU-Ansible.ansible-autofs
 #*
 
 galaxy_info:

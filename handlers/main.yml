@@ -1,6 +1,4 @@
 ---
-# handlers file for systemd-mounts
-# systemd uses - for dir separator, so dirs with dashes need escaped according to systemd-escape rules
 #*
 #* ## Handlers
 #*
@@ -13,6 +11,11 @@
 #* Alternatively, the *Start systemd automount* and *Enable systemd automount*
 #* handlers are run on mounts that have the 'automount' directive set to true.
 #*
+#* **NOTE**: systemd uses a dash ('-') as a directory separator. Directories
+#* that incldue dashes in their path need to be escaped according to the 
+#* systemd-escape rules (man systemd-escape).
+#*
+
 - name: Reload systemd
   systemd:
     daemon_reload: yes

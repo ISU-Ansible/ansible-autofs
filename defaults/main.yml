@@ -20,6 +20,7 @@
 #* * **autofs_mounts_manage_service**
 #* * **autofs_mounts_allow_reload**
 #*
+
 use_systemd_mounts: false
 use_autofs_mounts: false
 systemd_mounts: {}
@@ -51,7 +52,6 @@ autofs_mounts_allow_reload: {}
 #*       - Mount1
 #*
 #*     use_autofs_mounts: true
-#*
 #*     autofs_mounts:
 #*      Mount2:
 #*        share: someserver:/export
@@ -59,7 +59,6 @@ autofs_mounts_allow_reload: {}
 #*        type: nfs
 #*        options:
 #*          - uid=1000
-#*
 #*     autofs_mounts_enabled:
 #*       - Mount2
 #*
