@@ -1,1 +1,24 @@
 ---
+#*
+#* ## Variables
+#*
+#* By default, we set the **systemd_automount_os_supported** and
+#* **autofs_automount_os_supported** variables to be false. This is overridden
+#* in the *RedHat.yml* and *Fedora.yml* files. When other operating systems are
+#* later included, they will have files added to the *vars/* folder
+#*
+#* ### Fedora Variables
+#*
+#* There is currently no difference between the *Fedora.yml* and *RedHat.yml*
+#* files. The only reason we include a separate file is in the event that
+#* Fedora upstream includes some separate file/variable/prerequisite that
+#* causes the role not to run on Fedora.
+#*
+#* ### Red Hat 7
+#*
+#* We currently only support the Red Hat Enterprise Linux 7 OS variant. Red Hat
+#* Enterprise Linux 6 support could be added, but unless this is a highly
+#* requested feature, we intend to only support RHEL 7 and above.
+#*
+autofs_automount_os_supported: false
+systemd_automount_os_supported: false
