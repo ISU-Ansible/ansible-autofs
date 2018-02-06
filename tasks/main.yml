@@ -14,12 +14,12 @@
 #* variable files from the *vars/* folder. This is meant to check for the most
 #* specific variable file to the least specific.
 #*
-#* * "{{ ansible_distribution }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
-#* * "{{ ansible_distribution }}_{{ ansible_distribution_major_version}}.yml"
-#* * "{{ ansible_distribution }}.yml"
-#* * "{{ ansible_os_family }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
-#* * "{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml"
-#* * "{{ ansible_os_family }}.yml"
+#* * "{{ ansible\_distribution }}\_{{ ansible\_distribution\_version | replace('.','\_') }}.yml"
+#* * "{{ ansible\_distribution }}\_{{ ansible\_distribution\_major\_version}}.yml"
+#* * "{{ ansible\_distribution }}.yml"
+#* * "{{ ansible\_os\_family }}\_{{ ansible\_distribution\_version | replace('.','\_') }}.yml"
+#* * "{{ ansible\_os\_family }}\_{{ ansible\_distribution\_major\_version }}.yml"
+#* * "{{ ansible\_os\_family }}.yml"
 #*
 #* The inclusion of these variable files  is to facilitate later inclusion of
 #* other operating systems, should the need arise.

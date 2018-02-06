@@ -165,12 +165,12 @@ To facilitate mounts, the files include the first found of the following
 variable files from the *vars/* folder. This is meant to check for the most
 specific variable file to the least specific.
 
-* "{{ ansible_distribution }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
-* "{{ ansible_distribution }}_{{ ansible_distribution_major_version}}.yml"
-* "{{ ansible_distribution }}.yml"
-* "{{ ansible_os_family }}_{{ ansible_distribution_version | replace('.','_') }}.yml"
-* "{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml"
-* "{{ ansible_os_family }}.yml"
+* "{{ ansible\_distribution }}\_{{ ansible\_distribution\_version | replace('.','\_') }}.yml"
+* "{{ ansible\_distribution }}\_{{ ansible\_distribution\_major\_version}}.yml"
+* "{{ ansible\_distribution }}.yml"
+* "{{ ansible\_os\_family }}\_{{ ansible\_distribution\_version | replace('.','\_') }}.yml"
+* "{{ ansible\_os\_family }}\_{{ ansible\_distribution\_major\_version }}.yml"
+* "{{ ansible\_os\_family }}.yml"
 
 The inclusion of these variable files  is to facilitate later inclusion of
 other operating systems, should the need arise.
@@ -207,7 +207,7 @@ Alternatively, the *Start systemd automount* and *Enable systemd automount*
 handlers are run on mounts that have the 'automount' directive set to true.
 
 **NOTE**: systemd uses a dash ('-') as a directory separator. Directories
-that incldue dashes in their path need to be escaped according to the
+that incldue dashes in their path need to be escaped according to the 
 systemd-escape rules (man systemd-escape).
 
 
@@ -264,3 +264,4 @@ The actual map file is put in /etc/auto.*x*, where *x* is the mountpoint with
 dashes ('-') instead of slashes ('/') separating the file path.
 
     {{ item.value.mount[1:] }} {{ item.value.options | join(",") }} {{ item.value.share }}
+
