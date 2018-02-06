@@ -1,6 +1,8 @@
 ---
 #*
-#* # Autofs
+#* # Autofs [![Build Status](https://travis-ci.org/ISU-Ansible/ansible-autofs.svg?branch=master)](https://travis-ci.org/ISU-Ansible/ansible-autofs)
+#*
+#* Documentation generated using [mddoc](https://github.com/raznikk/mddoc).
 #*
 #* This ansible role aids in the creation of automount files using either
 #* the autofs service or the systemd init system.

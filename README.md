@@ -1,6 +1,9 @@
 
 
-# Autofs
+# Autofs [![Build Status](https://travis-ci.org/ISU-Ansible/ansible-autofs.svg?branch=master)](https://travis-ci.org/ISU-Ansible/ansible-autofs)
+
+
+Documentation generated using [mddoc](https://github.com/raznikk/mddoc).
 
 
 This ansible role aids in the creation of automount files using either
@@ -213,5 +216,3 @@ The *Enable systemd mount* and *Start systemd mount* handlers are run on any
 mount that does not have the 'automount' directive set to false, or not set.
 Alternatively, the *Start systemd automount* and *Enable systemd automount*
 handlers are run on mounts that have the 'automount' directive set to true.
-
-
