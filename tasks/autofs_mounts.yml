@@ -58,4 +58,4 @@
   with_dict: "{{ autofs_mounts }}"
   notify:
     - Reload autofs
-  when: item.key is defined and item.key in autofs_mounts_enabled and item.value.automount is true
+  when: item.key is defined and item.key in autofs_mounts_enabled and item.value.automount
