@@ -32,7 +32,7 @@
 # Start the autofs service
 #
 - name: AUTOFS MOUNT | Enable Autofs and dependencies
-  systemctl:
+  service:
     name: "{{item}}"
     state: started
   with_items:
