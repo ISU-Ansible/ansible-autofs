@@ -1,5 +1,5 @@
-#
-# {{ ansible_managed }}
-#
+{{ ansible_managed | comment }}
 
-{{ item.value.mount[1:] }} {{ item.value.options | join(",") }} {{ item.value.share }}
+{% for inner in item %}
+{{ inner.value.mount }} -{{ inner.value.options | join(",") }} {{ inner.value.share }}
+{% endfor %}
