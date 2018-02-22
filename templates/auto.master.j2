@@ -1,5 +1,5 @@
 {{ ansible_managed | comment }}
 
-{% for item in autofs_maps %}
-{{ item.value.path }} /etc/auto.{{ item.key | lower }} -{{ item.value.options | join(",") }}
+{% for key, value in autofs_maps.iteritems() %}
+{{ value.path }} /etc/auto.{{ key | lower }} -{{ value.options | join(",") }}
 {% endfor %}
