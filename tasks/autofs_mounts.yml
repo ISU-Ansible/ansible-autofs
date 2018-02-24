@@ -28,13 +28,11 @@
     state: installed
   with_items: "{{ autofs_mount_packages }}"
 
-#
-# Start the autofs service
-#
 - name: AUTOFS MOUNT | Enable Autofs and dependencies
   service:
     name: "{{item}}"
     state: started
+    enabled: yes
   with_items:
     - nfs-secure
     - autofs
