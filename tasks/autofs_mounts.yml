@@ -45,7 +45,8 @@
   template:
     src: auto.master.j2
     dest: /etc/auto.master
-
+  notify:
+    - Reload autofs
 - name: Create map-files
   template:
     src: auto.mount.j2
