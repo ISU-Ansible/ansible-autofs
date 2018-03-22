@@ -1,0 +1,56 @@
+---
+#*
+#* ## Templates
+#*
+#* There are four separate templates for this role -- two for systemd and two
+#* for autofs.
+#*
+#* The systemd templates manage the .mount and .automount files that are to be
+#* placed in the ```/etc/systemd/system``` directory. These handle the location
+#* of the mountpoints, the options,
+#*
+#* ### systemd.mount.j2
+#*
+#* If any alterations need to be made to this template, please submit a pull
+#* request noting the changes and the reason for those changes.
+#*
+#*     [Unit]
+#*     Description=Mount {{ item.key }}
+#*     After=network.target multi-user.target
+#*
+#*     [Mount]
+#*     What={{ item.value.share }}
+#*     Where={{ item.value.mount }}
+#*     Type={{ item.value.type | default ('mounts_type') }}
+#*     Options={{ item.value.options | join(',') | default ('mounts_options') }}
+#*
+#*     [Install]
+#*     WantedBy=default.target
+#*
+#* ### systemd.automount.j2
+#*
+#*     [Unit]
+#*     Description=Automount {{ item.key }}
+#*     After=network.target multi-user.target
+#*
+#*     [Automount]
+#*     Where={{ item.value.mount }}
+#*
+#*     [Install]
+#*     WantedBy=default.target
+#*
+#* ### auto.master.j2
+#*
+#* To configure items for the autofs daemon, we add auto.master items into the
+#* ```/etc/auto.master.d``` directory, so that we don't need to completely
+#* reconfigure ```/etc/auto.master``` each time a new mount is created.
+#*
+#*     {{ item.key | lower }} /etc/auto.{{ item.key | lower }}
+#*
+#* ### auto.mount.j2
+#*
+#* The actual map file is put in /etc/auto.*x*, where *x* is the mountpoint with
+#* dashes ('-') instead of slashes ('/') separating the file path.
+#*
+#*     {{ item.value.mount[1:] }} {{ item.value.options | join(",") }} {{ item.value.share }}
+#*

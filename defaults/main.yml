@@ -1,62 +1,64 @@
 ---
+#*
+#* ## Default Variables
+#*
+#* ### Usage Variables
+#*
+#* * **use_systemd_mounts**: by default, set to false. Set this to true to enable the systemd task list.
+#* * **use_autofs_mounts**: by default, set to false. Set this to true to enable the autofs task list.
+#* * **systemd_mounts**: This variable is a dictionary of systemd mounts for the system.
+#* * **autofs_mounts**: This variable is a dictionary of autofs mounts for the system.
+#* * **systemd_mounts_enabled**: This variable should be a list of mounts to enable via systemd
+#* * **autofs_mounts_enabled**: This variable should be a list of mounts to enable via autofs
+#*
+#* ### Other Variables
+#*
+#* The following variables are used in testing.
+#*
+#* * **systemd_mounts_manage_service**
+#* * **systemd_mounts_allow_reload**
+#* * **autofs_mounts_manage_service**
+#* * **autofs_mounts_allow_reload**
+#*
 
 use_systemd_mounts: false
-systemd_mounts: {}
-systemd_mounts_enabled: []
-systemd_automounts_enabled: []
-systemd_mounts_manage_service: {}
-systemd_mounts_allow_reload: {}
-
 use_autofs_mounts: false
+systemd_mounts: {}
 autofs_mounts: {}
 autofs_mounts_enabled: {}
+systemd_mounts_enabled: []
+
+systemd_mounts_manage_service: {}
+systemd_mounts_allow_reload: {}
 autofs_mounts_manage_service: {}
 autofs_mounts_allow_reload: {}
 
-# use_systemd_mounts: true
-#
-# systemd_mounts:
-#   Mount1:
-#     share: //server/service$
-#     mount: /somemountpoint
-#     type: cifs
-#     options:
-#       - domain=local
-#       - username=user
-#       - password=pass
-#       - uid=1000
-#       - gid=1000
-#     automount: true
-#   Mount2:
-#     share: someserver:/export
-#     mount: /someothermountpoint
-#     type: nfs
-#     options:
-#       - uid=1000
-#     automount: false
-#
-# systemd_mounts_enabled:
-#   - Mount1
-#
-# use_autofs_mounts: true
-#
-# autofs_mounts:
-#   Mount1:
-#    share: //server/service$
-#    mount: /somemountpoint
-#    type: cifs
-#    options:
-#      - domain=local
-#      - username=user
-#      - password=pass
-#      - uid=1000
-#      - gid=1000
-#  Mount2:
-#    share: someserver:/export
-#    mount: /someothermountpoint
-#    type: nfs
-#    options:
-#      - uid=1000
-#
-# autofs_mounts_enabled:
-#   - Mount2
+#* ### Examples
+#*
+#*     use_systemd_mounts: true
+#*     systemd_mounts:
+#*       Mount1:
+#*         share: //server/service$
+#*         mount: /somemountpoint
+#*         type: cifs
+#*         options:
+#*           - domain=local
+#*           - username=user
+#*           - password=pass
+#*           - uid=1000
+#*           - gid=1000
+#*         automount: true
+#*     systemd_mounts_enabled:
+#*       - Mount1
+#*
+#*     use_autofs_mounts: true
+#*     autofs_mounts:
+#*      Mount2:
+#*        share: someserver:/export
+#*        mount: /someothermountpoint
+#*        type: nfs
+#*        options:
+#*          - uid=1000
+#*     autofs_mounts_enabled:
+#*       - Mount2
+#*

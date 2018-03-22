@@ -1,4 +1,48 @@
 ---
+#*
+#* ## Tasks
+#*
+#* The tasks module includes the following:
+#*
+#* * *systemd_mounts.yml*
+#* * *autofs_mounts.yml*
+#*
+#* Each include is associated with a **use** variable that must be enabled in
+#* order to include the file -- **use_systemd_mounts** and **use_autofs_mounts**.
+#*
+#* To facilitate mounts, the files include the first found of the following
+#* variable files from the *vars/* folder. This is meant to check for the most
+#* specific variable file to the least specific.
+#*
+#* * "{{ ansible\_distribution }}\_{{ ansible\_distribution\_version | replace('.','\_') }}.yml"
+#* * "{{ ansible\_distribution }}\_{{ ansible\_distribution\_major\_version}}.yml"
+#* * "{{ ansible\_distribution }}.yml"
+#* * "{{ ansible\_os\_family }}\_{{ ansible\_distribution\_version | replace('.','\_') }}.yml"
+#* * "{{ ansible\_os\_family }}\_{{ ansible\_distribution\_major\_version }}.yml"
+#* * "{{ ansible\_os\_family }}.yml"
+#*
+#* The inclusion of these variable files  is to facilitate later inclusion of
+#* other operating systems, should the need arise.
+#*
+#* After this, we set the following variables based on the
+#* **ansible_virtualization_type** fact:
+#*
+#* * **[autofs|systemd]_mounts_manage_service**
+#* * **[autofs|systemd]_mounts_allow_reload**
+#*
+#* These variables are set to aid in testing. These variables will be set to true
+#* only if the executing operating system is not running in a docker container.
+#* When these are set to 'true', no handlers will be run. Since testing is through
+#* travis-ci in a docker container, restarting the service would cause the role
+#* to fail the travis checks.
+#*
+#* The final check is to assert that the current operating system is supported.
+#* This variable is set within the *vars/* folder, using one of the variable
+#* files included above.
+#*
+#* Otherwise, the task list simply installs necessary packages for NFS and CIFS,
+#* then creates the mount/automount files in the appropraite location.
+#*
 - name: Include Systemd Mounts
   include_tasks: systemd_mounts.yml
   when: use_systemd_mounts

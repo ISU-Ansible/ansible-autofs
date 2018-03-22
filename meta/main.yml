@@ -1,4 +1,86 @@
 ---
+#*
+#* # Autofs [![Build Status](https://travis-ci.org/ISU-Ansible/ansible-autofs.svg?branch=master)](https://travis-ci.org/ISU-Ansible/ansible-autofs)
+#*
+#* Documentation generated using [mddoc](https://github.com/raznikk/mddoc).
+#*
+#* This ansible role aids in the creation of automount files using either
+#* the autofs service or the systemd init system.
+#*
+#* This role works under Enterprise Linux (Red Hat, CentOS, Scientific Linux)
+#* and the Fedora environments.
+#*
+#* To use this role, simply fill out the **systemd_mounts** or **autofs_mounts**
+#* variables in your variable list. The mounts are a set of key/value pairs
+#* defined as in the example below.
+#*
+#* There are 5 options used in the **systemd_mounts** file:
+#*
+#* | Option        | Description                                              |
+#* | ------------- | -------------------------------------------------------- |
+#* | **share**     | The location of the remote share using normal notation   |
+#* | **mount**     | The local mount-point of the remote filesystem           |
+#* | **type**      | Mount type                                               |
+#* | **options**   | Mount options (lists will be joined together by a comma) |
+#* | **automount** | Whether or not this will be an automount filesystem      |
+#*
+#* The autofs dictionary is the same as the systemd file without the
+#* **automount** mount option.
+#*
+#* To enable the mounts on your system, just populate the
+#* **systemd_mounts_enabled** list with the appropriate dictionary key of the
+#* mount and run the mount.
+#*
+#* This role also installs the following:
+#*
+#* * nfs-utils
+#* * nfs4-acl-tools
+#* * cifs-utils
+#*
+#* **Note**: Any mountpoint enabled for both autofs and systemd **should** be
+#* handled by the autofs daemon, but it is not recommended to enable both
+#* at the same time as this is not supported.
+#*
+#*
+#* ## Usage
+#*
+#*     - hosts: all
+#*       vars:
+#*         use_systemd_mounts: true
+#*         systemd_mounts:
+#*           Mount1:
+#*             share: //server/service$
+#*             mount: /somemountpoint
+#*             type: cifs
+#*             options:
+#*               - domain=local
+#*               - username=user
+#*               - password=pass
+#*               - uid=1001
+#*               - gid=1000
+#*             automount: true
+#*           Mount2:
+#*             share: someserver:/export
+#*             mount: /someothermountpoint
+#*             type: nfs
+#*             options:
+#*               - uid=1000
+#*             automount: false
+#*           Mount3:
+#*             share: someserver:/export
+#*             mount: /another-mountpoint
+#*             type: nfs
+#*             options:
+#*               - uid=1000
+#*             automount: false
+#*         systemd_mounts_enabled:
+#*           - Mount1
+#*           - Mount2
+#*           - Mount3
+#*       roles:
+#*         - ISU-Ansible.ansible-autofs
+#*
+
 galaxy_info:
   author: Barry Britt <bbritt@iastate.edu> and John Dickerson <jedicker@iastate.edu>
   description: A role for the installation and configuration of autofs
