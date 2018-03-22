@@ -1,6 +1,17 @@
 ---
 # handlers file for systemd-mounts
 # systemd uses - for dir separator, so dirs with dashes need escaped according to systemd-escape rules
+
+#==============================================================================
+# Flowchart:
+#   - Reload systemd handler: This should be the first handler called anytime we
+#      add/remove a unit file for [auto]mount.
+#   - Enable systemd [auto]mount:
+#       1. Run systemctl enable [unit-file]
+#       2. Run systemctl start [unit-file]
+# 
+#==============================================================================
+
 - name: Reload systemd
   systemd:
     daemon_reload: yes
@@ -20,7 +31,6 @@
   command: systemctl enable "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', "-") }}.mount"
   with_dict: "{{ systemd_mounts }}"
   notify:
-    - Reload systemd
     - Start systemd mount
   when: item.value.automount == false
 
@@ -28,7 +38,6 @@
   command: systemctl enable "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', "-") }}.automount"
   with_dict: "{{ systemd_mounts }}"
   notify:
-    - Reload systemd
     - Start systemd automount
   when: item.value.automount == true
 
