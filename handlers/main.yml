@@ -15,7 +15,7 @@
 #* handlers are run on mounts that have the 'automount' directive set to true.
 #*
 #* **NOTE**: systemd uses a dash ('-') as a directory separator. Directories
-#* that incldue dashes in their path need to be escaped according to the 
+#* that incldue dashes in their path need to be escaped according to the
 #* systemd-escape rules (man systemd-escape).
 #*
 
@@ -25,24 +25,32 @@
   when: systemd_mounts_manage_service
 
 - name: Start systemd mount
-  command: systemctl start "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', "-") }}.mount"
+  systemd:
+    name: "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', \"-\") }}.mount"
+    state: started
   with_dict: "{{ systemd_mounts }}"
   when: systemd_mounts_manage_service
 
 - name: Start systemd automount
-  command: systemctl start "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', "-") }}.automount"
+  systemd:
+    name: "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', \"-\") }}.automount"
+    state: started
   with_dict: "{{ systemd_mounts }}"
   when: systemd_mounts_manage_service
 
 - name: Enable systemd mount
-  command: systemctl enable "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', "-") }}.mount"
+  systemd:
+    name: "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', \"-\") }}.mount"
+    enabled: yes
   with_dict: "{{ systemd_mounts }}"
   notify:
     - Start systemd mount
   when: item.value.automount == false
 
 - name: Enable systemd automount
-  command: systemctl enable "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', "-") }}.automount"
+  systemd:
+    name: "{{ item.value.mount[1:] | replace('-', '\\x2d') | replace('/', \"-\") }}.automount"
+    enabled: yes
   with_dict: "{{ systemd_mounts }}"
   notify:
     - Start systemd automount

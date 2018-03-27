@@ -24,8 +24,7 @@
 use_systemd_mounts: false
 use_autofs_mounts: false
 systemd_mounts: {}
-autofs_mounts: {}
-autofs_mounts_enabled: {}
+autofs_maps: {}
 systemd_mounts_enabled: []
 
 systemd_mounts_manage_service: {}

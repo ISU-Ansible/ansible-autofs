@@ -28,34 +28,27 @@
     state: installed
   with_items: "{{ autofs_mount_packages }}"
 
-#
-# Start the autofs service
-#
 - name: AUTOFS MOUNT | Enable Autofs and dependencies
-  systemctl:
+  service:
     name: "{{item}}"
     state: started
+    enabled: yes
   with_items:
     - nfs-secure
     - autofs
 
-#
-# tasks for mounts
-#
-- name: AUTOFS MOUNT | Add map file(s) to auto.master template
+# tasks for mounts, v2
+
+- name: Create auto.master and add map-files
   template:
     src: auto.master.j2
-    dest: "/etc/auto.master.d/{{ item.value.mount[1:] | replace('/', '-') }}.mount"
-  with_dict: "{{ autofs_mounts }}"
+    dest: /etc/auto.master
   notify:
     - Reload autofs
-  when: item.key is defined and item.key in autofs_mounts_enabled
-
-- name: AUTOFS MOUNT | Add automount map
+- name: Create map-files
   template:
     src: auto.mount.j2
-    dest: "/etc/auto.{{ item.value.mount[1:] | replace('/', '-') }}"
-  with_dict: "{{ autofs_mounts }}"
+    dest: "/etc/auto.{{item.key}}"
+  with_dict: "{{ autofs_maps }}"
   notify:
     - Reload autofs
-  when: item.key is defined and item.key in autofs_mounts_enabled and item.value.automount is true
