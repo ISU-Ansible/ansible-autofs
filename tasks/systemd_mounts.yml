@@ -34,6 +34,13 @@
 # tasks for mounts
 # systemd uses - for dir separator, so dirs with dashes need escaped according to systemd-escape rules
 #
+- name: SYSTEMD MOUNT | Create mountpoints in filesystem
+  file:
+    path: "{{ item.value.mount }}"
+    state: directory
+  with_dict: "{{ systemd_mounts }}"
+  when: item.key in systemd_mounts_enabled
+
 - name: SYSTEMD MOUNT | Setup systemd Service for mountpoints
   template:
     src: systemd.mount.j2
