@@ -12,8 +12,8 @@
 
 - name: SYSTEMD MOUNT | Set facts for systemd_automount
   set_fact:
-    systemd_mounts_manage_service: "{{ false if ansible_virtualization_type == 'docker' else true }}"
-    systemd_mounts_allow_reload: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+    systemd_mounts_manage_service: "{{ false if ansible_virtualization_type is defined and ansible_virtualization_type == 'docker' else true }}"
+    systemd_mounts_allow_reload: "{{ false if ansible_virtualization_type is defined and ansible_virtualization_type == 'docker' else true }}"
 
 - name: SYSTEMD MOUNT | Assert that OS is supported
   assert:
