@@ -12,8 +12,8 @@
 
 - name: AUTOFS MOUNT | Set facts for autofs_automount
   set_fact:
-    autofs_mounts_manage_service: "{{ false if ansible_virtualization_type == 'docker' else true }}"
-    autofs_mounts_allow_reload: "{{ false if ansible_virtualization_type == 'docker' else true }}"
+    autofs_mounts_manage_service: "{{ false if ansible_virtualization_type is defined and ansible_virtualization_type == 'docker' else true }}"
+    autofs_mounts_allow_reload: "{{ false if ansible_virtualization_type is defined and ansible_virtualization_type == 'docker' else true }}"
 
 - name: AUTOFS MOUNT | Assert that OS is supported
   assert:
