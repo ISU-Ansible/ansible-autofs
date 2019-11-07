@@ -1,6 +1,7 @@
 [Unit]
 Description=Automount {{ item.key }}
-After=network.target multi-user.target
+After=remote-fs-pre.target network-online.target network.target
+Before=umount.target remote-fs.target
 
 [Automount]
 Where={{ item.value.mount }}
