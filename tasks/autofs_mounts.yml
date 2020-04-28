@@ -34,7 +34,6 @@
     state: started
     enabled: yes
   with_items:
-    - nfs-secure
     - autofs
 
 # tasks for mounts, v2

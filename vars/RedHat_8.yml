@@ -1,0 +1,14 @@
+---
+systemd_automount_os_supported: true
+autofs_automount_os_supported: true
+
+systemd_mount_packages:
+  - cifs-utils
+  - nfs-utils
+  - nfs4-acl-tools
+
+autofs_mount_packages:
+  - cifs-utils
+  - nfs-utils
+  - nfs4-acl-tools
+  - autofs

@@ -60,10 +60,8 @@
   systemd:
     name: autofs
     state: reloaded
-  when: autofs_mounts_manage_service
 
 - name: Restart autofs
   systemd:
     name: autofs
     state: restarted
-  when: autofs_mounts_manage_service
