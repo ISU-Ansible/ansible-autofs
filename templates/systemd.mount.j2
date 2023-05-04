@@ -1,7 +1,5 @@
 [Unit]
 Description=Mount {{ item.key }}
-After=remote-fs-pre.target network-online.target network.target
-Before=umount.target remote-fs.target
 
 [Mount]
 What={{ item.value.share }}
