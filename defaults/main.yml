@@ -24,8 +24,10 @@
 use_systemd_mounts: false
 use_autofs_mounts: false
 systemd_mounts: {}
+host_systemd_mounts: {}
 autofs_maps: {}
 systemd_mounts_enabled: []
+host_systemd_mounts_enabled: []
 
 systemd_mounts_manage_service: {}
 systemd_mounts_allow_reload: {}
